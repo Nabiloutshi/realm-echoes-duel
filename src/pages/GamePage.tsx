@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useGame } from '@/hooks/useGame';
-import PlayerInfo from '@/components/game/PlayerInfo';
+import { AIDifficulty } from '@/engine/types';
 import PhaseBar from '@/components/game/PhaseBar';
 import GameBoard from '@/components/game/GameBoard';
 import HandArea from '@/components/game/HandArea';
