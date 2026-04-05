@@ -1,4 +1,5 @@
 import { CardDefinition, BoardUnit, Rarity } from '@/engine/types';
+import { CARD_ART } from '@/data/cardArt';
 
 interface GameCardProps {
   card: CardDefinition;
@@ -124,15 +125,24 @@ export default function GameCard({
 
       {/* Illustration area (top 40%) */}
       <div
-        className="mx-1.5 mt-3 rounded-sm flex items-center justify-center overflow-hidden"
+        className="mx-1.5 mt-3 rounded-sm flex items-center justify-center overflow-hidden relative"
         style={{
           height: '38%',
           background: factionGradient,
         }}
       >
-        <span style={{ fontSize: size === 'sm' ? 24 : size === 'lg' ? 40 : 32, opacity: 0.7 }}>
-          {isSolari ? '☀' : '☽'}
-        </span>
+        {CARD_ART[card.id] ? (
+          <img
+            src={CARD_ART[card.id]}
+            alt={card.name}
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <span style={{ fontSize: size === 'sm' ? 24 : size === 'lg' ? 40 : 32, opacity: 0.7 }}>
+            {isSolari ? '☀' : '☽'}
+          </span>
+        )}
       </div>
 
       {/* Card name */}
