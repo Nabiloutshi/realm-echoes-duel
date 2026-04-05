@@ -1,4 +1,5 @@
 import { CardDefinition, BoardUnit, Rarity } from '@/engine/types';
+import { CARD_ART } from '@/data/cardArt';
 
 interface GameCardProps {
   card: CardDefinition;
