@@ -558,7 +558,7 @@ function aiCombat(state: GameState): GameState {
 
   for (let i = 0; i < 5; i++) {
     const attacker = s.opponent.board[i];
-    if (!attacker || attacker.cardType === 'RELIC' || attacker.currentAtk === 0) continue;
+    if (!attacker || attacker.card.cardType === 'RELIC' || attacker.currentAtk === 0) continue;
 
     while (attacker.attacksThisTurn < attacker.maxAttacks) {
       if (s.status !== 'PLAYING') return s;

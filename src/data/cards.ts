@@ -1,4 +1,4 @@
-import { CardDefinition } from '@/engine/types';
+import { CardDefinition, Faction } from '@/engine/types';
 
 export const ALL_CARDS: CardDefinition[] = [
   // ═══ SOLARI UNITS ═══
