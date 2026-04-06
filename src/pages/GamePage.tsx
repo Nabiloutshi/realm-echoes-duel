@@ -27,20 +27,27 @@ export default function GamePage() {
 
   if (!gameState) return null;
 
+  const canAttackOpponent = gameState.phase === 'COMBAT' && gameState.activeSide === 'player'
+    && gameState.selectedAttackerSlot !== null
+    && !gameState.opponent.board.some(u => u !== null);
+
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: 'hsl(220 40% 4%)' }}>
+    <div className="flex h-screen overflow-hidden" style={{ background: '#080b12' }}>
+      {/* LEFT: Player Hero */}
+      <div className="w-[170px] shrink-0 flex flex-col items-center justify-center py-4"
+        style={{
+          background: 'linear-gradient(180deg, #0a0e18, #080b12)',
+          borderRight: '2px solid #1a2235',
+        }}>
+        <PlayerInfo
+          player={gameState.player}
+          isActive={gameState.activeSide === 'player'}
+          isHero
+        />
+      </div>
+
+      {/* CENTER: Board + Hand */}
       <div className="flex-1 flex flex-col min-w-0">
-        <div className="flex items-center justify-between px-4 h-[60px] shrink-0"
-          style={{ background: 'hsl(220 30% 7%)', borderBottom: '1px solid hsl(220 20% 15%)' }}>
-          <PlayerInfo player={gameState.opponent} isActive={gameState.activeSide === 'opponent'} compact />
-          <PhaseBar
-            currentPhase={gameState.phase}
-            onNextPhase={handleNextPhase}
-            isPlayerTurn={gameState.activeSide === 'player' && !isAIThinking}
-            isLoading={isAIThinking}
-          />
-          <PlayerInfo player={gameState.player} isActive={gameState.activeSide === 'player'} compact />
-        </div>
         <GameBoard
           state={gameState}
           onSlotClick={handleSlotClick}
@@ -48,9 +55,47 @@ export default function GamePage() {
         />
         <HandArea state={gameState} onCardClick={handleSelectHandCard} />
       </div>
-      <div className="w-[200px] shrink-0" style={{ borderLeft: '1px solid hsl(220 20% 15%)' }}>
-        <EventLog events={gameState.events} />
+
+      {/* RIGHT: Opponent Hero + Phase Controls + Event Log */}
+      <div className="w-[170px] shrink-0 flex flex-col"
+        style={{
+          background: 'linear-gradient(180deg, #0a0e18, #080b12)',
+          borderLeft: '2px solid #1a2235',
+        }}>
+        {/* Opponent Hero */}
+        <div className="flex flex-col items-center pt-3 pb-2">
+          <PlayerInfo
+            player={gameState.opponent}
+            isActive={gameState.activeSide === 'opponent'}
+            isHero
+            canAttack={canAttackOpponent}
+            onAttackClick={() => handleAttackPlayer()}
+          />
+        </div>
+
+        {/* Divider */}
+        <div className="mx-4 h-px" style={{ background: '#1a2235' }} />
+
+        {/* Phase controls */}
+        <div className="flex flex-col items-center py-3">
+          <PhaseBar
+            currentPhase={gameState.phase}
+            onNextPhase={handleNextPhase}
+            isPlayerTurn={gameState.activeSide === 'player' && !isAIThinking}
+            isLoading={isAIThinking}
+            turn={gameState.turn}
+          />
+        </div>
+
+        {/* Divider */}
+        <div className="mx-4 h-px" style={{ background: '#1a2235' }} />
+
+        {/* Event Log fills remaining space */}
+        <div className="flex-1 min-h-0">
+          <EventLog events={gameState.events} />
+        </div>
       </div>
+
       <GameOverOverlay
         status={gameState.status}
         onNewGame={() => startGame(difficulty)}

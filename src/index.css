@@ -150,8 +150,9 @@
 }
 
 @keyframes floatUp {
-  0% { transform: translateY(0); opacity: 1; font-size: 1.5rem; }
-  100% { transform: translateY(-50px); opacity: 0; font-size: 1rem; }
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  30% { transform: translateY(-15px) scale(1.2); opacity: 1; }
+  100% { transform: translateY(-60px) scale(0.8); opacity: 0; }
 }
 
 .animate-shimmer {
