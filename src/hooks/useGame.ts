@@ -1,112 +1,70 @@
-import { useState, useCallback } from 'react';
-import { GameState, AIDifficulty } from '@/engine/types';
-import { createGame, nextPhase, playCard, attackTarget, attackPlayer, playAITurn } from '@/engine/gameEngine';
-import { buildDefaultDeck } from '@/data/cards';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { GameState, CardDefinition, AIDifficulty, HeroDefinition } from '@/engine/types';
+import { createGame, processRound } from '@/engine/gameEngine';
+import { ALL_CARDS } from '@/data/cards';
+import { HEROES } from '@/data/heroes';
 
 export function useGame() {
   const [gameState, setGameState] = useState<GameState | null>(null);
-  const [isAIThinking, setIsAIThinking] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const autoRef = useRef(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const startGame = useCallback((difficulty: AIDifficulty = 'SCHOLAR') => {
-    const playerDeck = buildDefaultDeck('SOLARI');
-    const opponentDeck = buildDefaultDeck('UMBRA');
-    const state = createGame(playerDeck, opponentDeck, difficulty);
-    // Auto-process DRAW and RESOURCE for first turn
-    let s = state;
-    s = nextPhase(s); // DRAW -> RESOURCE
-    s = nextPhase(s); // RESOURCE -> MAIN
-    setGameState(s);
+  const startGame = useCallback((
+    playerHero: HeroDefinition,
+    playerCards: CardDefinition[],
+    difficulty: AIDifficulty,
+  ) => {
+    const umbraHeroes = HEROES.filter(h => h.faction === 'UMBRA');
+    const aiHero = umbraHeroes[Math.floor(Math.random() * umbraHeroes.length)];
+    const umbraUnits = ALL_CARDS.filter(c => c.faction === 'UMBRA' && c.cardType === 'UNIT');
+    let aiCards: CardDefinition[];
+
+    if (difficulty === 'NOVICE') {
+      aiCards = [...umbraUnits].sort(() => Math.random() - 0.5).slice(0, 5);
+    } else if (difficulty === 'SCHOLAR') {
+      aiCards = [...umbraUnits].sort((a, b) => {
+        const r: Record<string, number> = { COMMON: 0, RARE: 1, EPIC: 2, LEGENDARY: 3 };
+        return r[b.rarity] - r[a.rarity];
+      }).slice(0, 5);
+    } else {
+      aiCards = [...umbraUnits].sort((a, b) => (b.atk * 2 + b.hp) - (a.atk * 2 + a.hp)).slice(0, 5);
+    }
+
+    const state = createGame(playerHero, playerCards, aiHero, aiCards, difficulty);
+    autoRef.current = false;
+    setGameState(state);
   }, []);
 
-  const handleNextPhase = useCallback(() => {
-    if (!gameState || gameState.status !== 'PLAYING') return;
+  const endRound = useCallback(() => {
+    if (!gameState || gameState.status !== 'PLAYING' || isAnimating) return;
+    setIsAnimating(true);
+    const newState = processRound(gameState);
+    setGameState(newState);
+    setTimeout(() => setIsAnimating(false), 800);
+  }, [gameState, isAnimating]);
 
-    let s = nextPhase(gameState);
+  const toggleAuto = useCallback(() => {
+    const newAuto = !autoRef.current;
+    autoRef.current = newAuto;
+    setGameState(prev => prev ? { ...prev, isAutoBattle: newAuto } : null);
+  }, []);
 
-    // Auto-advance non-interactive phases
-    while (s.status === 'PLAYING' && s.activeSide === 'player' &&
-      (s.phase === 'DRAW' || s.phase === 'RESOURCE' || s.phase === 'EFFECTS')) {
-      s = nextPhase(s);
-    }
+  const toggleSpeed = useCallback(() => {
+    setGameState(prev => prev ? { ...prev, battleSpeed: prev.battleSpeed === 1 ? 2 : 1 } : null);
+  }, []);
 
-    if (s.phase === 'END' && s.activeSide === 'player') {
-      s = nextPhase(s); // Move to opponent's turn
-    }
-
-    // AI turn
-    if (s.activeSide === 'opponent' && s.status === 'PLAYING') {
-      setGameState(s);
-      setIsAIThinking(true);
-      setTimeout(() => {
-        const afterAI = playAITurn(s);
-        // Auto-advance player's draw/resource
-        let ps = afterAI;
-        while (ps.status === 'PLAYING' && ps.activeSide === 'player' &&
-          (ps.phase === 'DRAW' || ps.phase === 'RESOURCE' || ps.phase === 'EFFECTS')) {
-          ps = nextPhase(ps);
-        }
-        setGameState(ps);
-        setIsAIThinking(false);
-      }, 800);
+  useEffect(() => {
+    if (!gameState || gameState.status !== 'PLAYING') {
+      autoRef.current = false;
       return;
     }
-
-    setGameState(s);
-  }, [gameState]);
-
-  const handleSelectHandCard = useCallback((index: number) => {
-    if (!gameState || gameState.phase !== 'MAIN' || gameState.activeSide !== 'player') return;
-    setGameState({
-      ...gameState,
-      selectedHandIndex: gameState.selectedHandIndex === index ? null : index,
-      selectedAttackerSlot: null,
-    });
-  }, [gameState]);
-
-  const handleSlotClick = useCallback((side: 'player' | 'opponent', slotIndex: number) => {
-    if (!gameState || gameState.activeSide !== 'player') return;
-
-    // MAIN phase: play card to slot
-    if (gameState.phase === 'MAIN' && side === 'player' && gameState.selectedHandIndex !== null) {
-      const s = playCard(gameState, gameState.selectedHandIndex, slotIndex);
-      setGameState(s);
-      return;
+    if (autoRef.current && !isAnimating) {
+      const delay = gameState.battleSpeed === 2 ? 600 : 1200;
+      timerRef.current = setTimeout(endRound, delay);
     }
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [gameState, isAnimating, endRound]);
 
-    // COMBAT phase: select attacker
-    if (gameState.phase === 'COMBAT' && side === 'player') {
-      const unit = gameState.player.board[slotIndex];
-      if (unit && unit.attacksThisTurn < unit.maxAttacks && unit.currentAtk > 0 && unit.card.cardType === 'UNIT') {
-        setGameState({
-          ...gameState,
-          selectedAttackerSlot: gameState.selectedAttackerSlot === slotIndex ? null : slotIndex,
-          selectedHandIndex: null,
-        });
-      }
-      return;
-    }
-
-    // COMBAT phase: attack target
-    if (gameState.phase === 'COMBAT' && side === 'opponent' && gameState.selectedAttackerSlot !== null) {
-      const s = attackTarget(gameState, gameState.selectedAttackerSlot, slotIndex);
-      setGameState(s);
-      return;
-    }
-  }, [gameState]);
-
-  const handleAttackPlayer = useCallback(() => {
-    if (!gameState || gameState.selectedAttackerSlot === null) return;
-    const s = attackPlayer(gameState, gameState.selectedAttackerSlot);
-    setGameState(s);
-  }, [gameState]);
-
-  return {
-    gameState,
-    isAIThinking,
-    startGame,
-    handleNextPhase,
-    handleSelectHandCard,
-    handleSlotClick,
-    handleAttackPlayer,
-  };
+  return { gameState, isAnimating, startGame, endRound, toggleAuto, toggleSpeed };
 }

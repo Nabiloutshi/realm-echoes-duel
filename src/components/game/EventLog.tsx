@@ -1,46 +1,37 @@
-import { GameEvent } from '@/engine/types';
+import { CombatEvent } from '@/engine/types';
 
 interface EventLogProps {
-  events: GameEvent[];
+  events: CombatEvent[];
 }
 
-const typeColors: Record<string, string> = {
-  DAMAGE: '#ef4444',
-  HEAL: '#4ade80',
-  SHIELD: '#60a5fa',
-  POISON: '#22c55e',
-  DEATH: '#991b1b',
-  PLAY: '#c9a84c',
-  DRAW: '#8a9bb0',
-  TURN_START: '#c9a84c',
-  EFFECT: '#a78bfa',
-  ATTACK: '#fb923c',
-  GAME_OVER: '#fbbf24',
-};
-
 export default function EventLog({ events }: EventLogProps) {
-  const recent = events.slice(-30);
+  const last = events.slice(-30);
+
+  const getColor = (type: CombatEvent['type']) => {
+    switch (type) {
+      case 'DAMAGE': case 'HERO_DAMAGE': return '#ef4444';
+      case 'HEAL': return '#4ade80';
+      case 'DEATH': return '#a855f7';
+      case 'ATTACK': return '#fb923c';
+      case 'ROUND_START': return '#c9a84c';
+      case 'GAME_OVER': return '#fbbf24';
+      case 'POISON': return '#22c55e';
+      case 'SHIELD': return '#60a5fa';
+      case 'EFFECT': return '#8ab4f8';
+      default: return '#8a9bb0';
+    }
+  };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden"
-      style={{
-        background: 'linear-gradient(180deg, #0c1018, #080b12)',
-        borderLeft: '2px solid #1a2235',
-      }}>
-      <div className="px-3 py-2 font-cinzel font-semibold text-center"
-        style={{
-          borderBottom: '1px solid #1a2235',
-          color: '#c9a84c',
-          fontSize: 10,
-          letterSpacing: '0.1em',
-        }}>
-        📜 JOURNAL
+    <div className="flex flex-col h-full">
+      <div className="font-cinzel text-[10px] tracking-wider px-3 py-2"
+        style={{ color: 'hsl(var(--primary))', borderBottom: '1px solid hsl(var(--border))' }}>
+        JOURNAL
       </div>
-      <div className="flex-1 overflow-y-auto px-2 py-1 space-y-0.5" id="event-log">
-        {recent.map((evt, i) => (
-          <div key={i} className="py-0.5 leading-tight font-crimson"
-            style={{ color: typeColors[evt.type] || '#8a9bb0', fontSize: 10 }}>
-            {evt.message}
+      <div className="flex-1 overflow-y-auto px-2 py-1" style={{ maxHeight: 300 }}>
+        {last.map((ev, i) => (
+          <div key={i} className="py-0.5 text-[9px] font-crimson leading-tight" style={{ color: getColor(ev.type) }}>
+            {ev.message}
           </div>
         ))}
       </div>
