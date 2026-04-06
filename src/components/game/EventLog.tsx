@@ -5,35 +5,41 @@ interface EventLogProps {
 }
 
 const typeColors: Record<string, string> = {
-  DAMAGE: 'hsl(0 70% 55%)',
-  HEAL: 'hsl(142 60% 50%)',
-  SHIELD: 'hsl(210 70% 55%)',
-  POISON: 'hsl(142 70% 40%)',
-  DEATH: 'hsl(0 50% 40%)',
-  PLAY: 'hsl(42 50% 54%)',
-  DRAW: 'hsl(213 15% 55%)',
-  TURN_START: 'hsl(42 50% 54%)',
-  EFFECT: 'hsl(270 50% 55%)',
-  ATTACK: 'hsl(22 78% 57%)',
-  GAME_OVER: 'hsl(42 80% 60%)',
+  DAMAGE: '#ef4444',
+  HEAL: '#4ade80',
+  SHIELD: '#60a5fa',
+  POISON: '#22c55e',
+  DEATH: '#991b1b',
+  PLAY: '#c9a84c',
+  DRAW: '#8a9bb0',
+  TURN_START: '#c9a84c',
+  EFFECT: '#a78bfa',
+  ATTACK: '#fb923c',
+  GAME_OVER: '#fbbf24',
 };
 
 export default function EventLog({ events }: EventLogProps) {
   const recent = events.slice(-30);
 
   return (
-    <div
-      className="flex flex-col h-full overflow-hidden rounded-lg"
-      style={{ background: 'hsl(220 30% 8%)', border: '1px solid hsl(220 20% 18%)' }}
-    >
-      <div className="px-3 py-1.5 font-cinzel font-semibold text-[10px]"
-        style={{ borderBottom: '1px solid hsl(220 20% 18%)', color: 'hsl(42 50% 54%)' }}>
+    <div className="flex flex-col h-full overflow-hidden"
+      style={{
+        background: 'linear-gradient(180deg, #0c1018, #080b12)',
+        borderLeft: '2px solid #1a2235',
+      }}>
+      <div className="px-3 py-2 font-cinzel font-semibold text-center"
+        style={{
+          borderBottom: '1px solid #1a2235',
+          color: '#c9a84c',
+          fontSize: 10,
+          letterSpacing: '0.1em',
+        }}>
         📜 JOURNAL
       </div>
       <div className="flex-1 overflow-y-auto px-2 py-1 space-y-0.5" id="event-log">
         {recent.map((evt, i) => (
-          <div key={i} className="text-[9px] leading-tight py-0.5"
-            style={{ color: typeColors[evt.type] || 'hsl(213 15% 55%)' }}>
+          <div key={i} className="py-0.5 leading-tight font-crimson"
+            style={{ color: typeColors[evt.type] || '#8a9bb0', fontSize: 10 }}>
             {evt.message}
           </div>
         ))}
