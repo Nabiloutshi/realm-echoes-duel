@@ -1,165 +1,94 @@
-import { GameState, BoardUnit } from '@/engine/types';
+import { GameState, FloatingNumber } from '@/engine/types';
 import GameCard from './GameCard';
 
 interface GameBoardProps {
   state: GameState;
-  onSlotClick: (side: 'player' | 'opponent', slotIndex: number) => void;
-  onPlayerAvatarClick: (side: 'opponent') => void;
 }
 
-export default function GameBoard({ state, onSlotClick, onPlayerAvatarClick }: GameBoardProps) {
-  const renderSlot = (unit: BoardUnit | null, index: number, side: 'player' | 'opponent') => {
-    const isPlayerSide = side === 'player';
-    const isCombatPhase = state.phase === 'COMBAT' && state.activeSide === 'player';
-    const isMainPhase = state.phase === 'MAIN' && state.activeSide === 'player';
+export default function GameBoard({ state }: GameBoardProps) {
+  return (
+    <div className="flex-1 flex flex-col justify-center items-center relative overflow-hidden board-grid"
+      style={{ background: 'linear-gradient(180deg, #080b12 0%, #0d1220 50%, #080b12 100%)' }}>
 
-    let isAttackable = false;
-    let isTargetable = false;
-    let isExhausted = false;
+      {/* Opponent territory label */}
+      <div className="font-cinzel text-[10px] tracking-[3px] mb-2"
+        style={{ color: 'hsl(var(--umbra) / 0.5)' }}>
+        TERRITOIRE ENNEMI
+      </div>
 
-    if (unit && isPlayerSide && isCombatPhase) {
-      isAttackable = unit.attacksThisTurn < unit.maxAttacks && unit.currentAtk > 0 && unit.card.cardType === 'UNIT';
-      isExhausted = unit.attacksThisTurn >= unit.maxAttacks;
-    }
-    if (unit && !isPlayerSide && isCombatPhase && state.selectedAttackerSlot !== null) {
-      isTargetable = true;
-    }
-
-    const isSelected = isPlayerSide && state.selectedAttackerSlot === index;
-    const isEmptyPlayable = !unit && isPlayerSide && isMainPhase && state.selectedHandIndex !== null;
-
-    // Floating numbers
-    const floats = state.floatingNumbers.filter(f => f.slotIndex === index && f.side === side);
-
-    return (
-      <div
-        key={`${side}-${index}`}
-        onClick={() => onSlotClick(side, index)}
-        className="relative flex items-center justify-center cursor-pointer"
-        style={{
-          width: 118, height: 156,
-          border: unit
-            ? isSelected ? '2px solid #fb923c' : '1px solid rgba(255,255,255,0.08)'
-            : isEmptyPlayable ? '1px solid rgba(201,168,76,0.4)' : '1px solid rgba(255,255,255,0.05)',
-          borderRadius: 8,
-          background: unit ? 'transparent'
-            : isEmptyPlayable ? 'rgba(201,168,76,0.05)'
-            : 'rgba(255,255,255,0.02)',
-          boxShadow: isSelected ? '0 0 12px rgba(251,146,60,0.5)' : 'none',
-        }}
-      >
-        {unit ? (
-          <GameCard
-            card={unit.card}
-            boardUnit={unit}
-            size="md"
-            isAttackable={isAttackable}
-            isTargetable={isTargetable}
-            isExhausted={isExhausted}
-            isSelected={isSelected}
-          />
-        ) : (
-          /* Empty slot - ornate circle pattern like Deck Heroes */
-          <div className="flex items-center justify-center" style={{
-            width: 50, height: 50, borderRadius: '50%',
-            border: '1px solid rgba(255,255,255,0.06)',
-            background: 'rgba(255,255,255,0.02)',
-          }}>
-            <span style={{ fontSize: 16, opacity: 0.1, color: '#c9a84c' }}>
-              {isEmptyPlayable ? '✦' : '◈'}
-            </span>
-          </div>
-        )}
-
-        {/* Floating damage/heal numbers — BIG like Deck Heroes */}
-        {floats.map(f => (
-          <div
-            key={f.id}
-            className="absolute inset-0 flex items-center justify-center pointer-events-none z-30 animate-float-up"
-          >
-            <span
-              className="font-cinzel font-black"
-              style={{
-                fontSize: 36,
-                color: f.type === 'damage' ? '#ff2222'
-                  : f.type === 'heal' ? '#22ff44'
-                  : f.type === 'shield' ? '#4488ff'
-                  : '#22cc44',
-                textShadow: f.type === 'damage'
-                  ? '0 0 10px rgba(255,0,0,0.8), 0 2px 4px rgba(0,0,0,0.9)'
-                  : '0 0 10px rgba(0,255,0,0.8), 0 2px 4px rgba(0,0,0,0.9)',
-                WebkitTextStroke: '1px rgba(0,0,0,0.5)',
-              }}
-            >
-              {f.type === 'heal' || f.type === 'shield' ? '+' : '-'}{f.value}
-            </span>
+      {/* Opponent board */}
+      <div className="flex gap-2 mb-4">
+        {state.opponent.board.map((unit, i) => (
+          <div key={`opp-${i}`} className="relative">
+            {unit ? <GameCard unit={unit} /> : <EmptySlot faction="UMBRA" />}
+            {state.floatingNumbers
+              .filter(f => f.side === 'opponent' && f.slotIndex === i)
+              .map(f => <FloatingNum key={f.id} data={f} />)}
           </div>
         ))}
       </div>
-    );
-  };
 
-  const canAttackPlayer = state.phase === 'COMBAT' && state.activeSide === 'player'
-    && state.selectedAttackerSlot !== null
-    && !state.opponent.board.some(u => u !== null);
+      {/* Center divider */}
+      <div className="flex items-center gap-3 my-2">
+        <div style={{ width: 80, height: 1, background: 'linear-gradient(90deg, transparent, hsl(var(--primary)), transparent)' }} />
+        <span className="font-cinzel text-[10px] tracking-wider" style={{ color: 'hsl(var(--primary) / 0.6)' }}>
+          ✦ CHAMP DE BATAILLE ✦
+        </span>
+        <div style={{ width: 80, height: 1, background: 'linear-gradient(90deg, transparent, hsl(var(--primary)), transparent)' }} />
+      </div>
+
+      {/* Player board */}
+      <div className="flex gap-2 mt-4">
+        {state.player.board.map((unit, i) => (
+          <div key={`plr-${i}`} className="relative">
+            {unit ? <GameCard unit={unit} /> : <EmptySlot faction="SOLARI" />}
+            {state.floatingNumbers
+              .filter(f => f.side === 'player' && f.slotIndex === i)
+              .map(f => <FloatingNum key={f.id} data={f} />)}
+          </div>
+        ))}
+      </div>
+
+      {/* Player territory label */}
+      <div className="font-cinzel text-[10px] tracking-[3px] mt-2"
+        style={{ color: 'hsl(var(--solari) / 0.5)' }}>
+        VOTRE TERRITOIRE
+      </div>
+    </div>
+  );
+}
+
+function EmptySlot({ faction }: { faction: 'SOLARI' | 'UMBRA' }) {
+  const color = faction === 'SOLARI' ? 'hsl(var(--solari))' : 'hsl(var(--umbra))';
+  return (
+    <div className="flex items-center justify-center"
+      style={{
+        width: 140, height: 195, borderRadius: 6,
+        border: `1px dashed ${color}30`, background: '#0a0e1840',
+      }}>
+      <div style={{
+        width: 50, height: 50, borderRadius: '50%',
+        border: `1px solid ${color}20`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <span style={{ color: `${color}30`, fontSize: 20 }}>✦</span>
+      </div>
+    </div>
+  );
+}
+
+function FloatingNum({ data }: { data: FloatingNumber }) {
+  const color = data.type === 'damage' ? '#ff4444'
+    : data.type === 'heal' ? '#4ade80'
+    : data.type === 'shield' ? '#60a5fa' : '#22c55e';
 
   return (
-    <div className="flex-1 flex flex-col relative overflow-hidden"
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 animate-float-up"
       style={{
-        background: 'linear-gradient(180deg, #0a0e18 0%, #0f1520 30%, #0f1520 70%, #0a0e18 100%)',
+        color, fontSize: 36, fontWeight: 900, fontFamily: 'Cinzel, serif',
+        textShadow: `0 2px 8px ${color}80, 0 0 20px ${color}40`,
       }}>
-
-      {/* Metallic frame border overlay */}
-      <div className="absolute inset-0 pointer-events-none z-10"
-        style={{
-          border: '3px solid #1a2235',
-          borderRadius: 4,
-          boxShadow: 'inset 0 0 30px rgba(0,0,0,0.5)',
-        }}
-      />
-
-      {/* Background ornate pattern */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-        style={{
-          backgroundImage: `radial-gradient(circle at 30% 30%, #c9a84c 1px, transparent 1px),
-            radial-gradient(circle at 70% 70%, #7c3aed 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
-        }}
-      />
-
-      {/* Faction glow - Umbra top */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-48 rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse, rgba(124,58,237,0.08), transparent)' }} />
-      {/* Faction glow - Solari bottom */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-48 rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse, rgba(232,132,60,0.08), transparent)' }} />
-
-      {/* Opponent row */}
-      <div className="flex-1 flex flex-col items-center justify-center relative">
-        <div className="flex items-center gap-1.5">
-          {state.opponent.board.map((unit, i) => renderSlot(unit, i, 'opponent'))}
-        </div>
-      </div>
-
-      {/* Center divider — metallic line */}
-      <div className="flex items-center justify-center py-1 relative z-10">
-        <div className="flex-1 h-px mx-4" style={{ background: 'linear-gradient(90deg, transparent, #c9a84c40, transparent)' }} />
-        <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#c9a84c60' }} />
-          <span className="font-cinzel text-[9px] tracking-[0.15em]" style={{ color: '#c9a84c50' }}>
-            VS
-          </span>
-          <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#c9a84c60' }} />
-        </div>
-        <div className="flex-1 h-px mx-4" style={{ background: 'linear-gradient(90deg, transparent, #c9a84c40, transparent)' }} />
-      </div>
-
-      {/* Player row */}
-      <div className="flex-1 flex flex-col items-center justify-center relative">
-        <div className="flex items-center gap-1.5">
-          {state.player.board.map((unit, i) => renderSlot(unit, i, 'player'))}
-        </div>
-      </div>
+      {data.value > 0 ? `+${data.value}` : data.value}
     </div>
   );
 }

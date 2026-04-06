@@ -1,7 +1,29 @@
 import { useState } from 'react';
 import { ALL_CARDS } from '@/data/cards';
-import { CardDefinition, Faction, CardType, Rarity } from '@/engine/types';
+import { CardDefinition, Faction, Rarity, BoardUnit } from '@/engine/types';
 import GameCard from '@/components/game/GameCard';
+
+type CardType = 'UNIT' | 'SPELL' | 'RELIC';
+
+// Create a dummy BoardUnit for display purposes
+function makeDummyUnit(card: CardDefinition): BoardUnit {
+  return {
+    instanceId: `preview-${card.id}`,
+    cardId: card.id,
+    card,
+    currentAtk: card.atk * 50,
+    currentHp: card.hp * 100,
+    maxHp: card.hp * 100,
+    currentShield: 0,
+    poisonStacks: 0,
+    wait: card.speed,
+    hasAttacked: false,
+    hasRebirth: false,
+    rebirthHp: 0,
+    animState: 'idle',
+    level: 1,
+  };
+}
 
 export default function CollectionPage() {
   const [factionFilter, setFactionFilter] = useState<Faction | 'ALL'>('ALL');
@@ -55,8 +77,7 @@ export default function CollectionPage() {
                 background: factionFilter === f ? 'hsl(42 50% 54% / 0.2)' : 'hsl(220 20% 15%)',
                 border: `1px solid ${factionFilter === f ? 'hsl(42 50% 54%)' : 'hsl(220 20% 22%)'}`,
                 color: factionFilter === f ? 'hsl(42 50% 54%)' : 'hsl(213 15% 55%)',
-              }}
-            >
+              }}>
               {f === 'ALL' ? 'Toutes' : f}
             </button>
           ))}
@@ -68,18 +89,17 @@ export default function CollectionPage() {
                 background: typeFilter === t ? 'hsl(42 50% 54% / 0.2)' : 'hsl(220 20% 15%)',
                 border: `1px solid ${typeFilter === t ? 'hsl(42 50% 54%)' : 'hsl(220 20% 22%)'}`,
                 color: typeFilter === t ? 'hsl(42 50% 54%)' : 'hsl(213 15% 55%)',
-              }}
-            >
+              }}>
               {t === 'ALL' ? 'Tous' : t === 'UNIT' ? '⚔ Unité' : t === 'SPELL' ? '✦ Sort' : '◈ Relique'}
             </button>
           ))}
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-6 gap-4 overflow-y-auto flex-1">
+        <div className="grid grid-cols-5 gap-4 overflow-y-auto flex-1">
           {filtered.map(card => (
             <div key={card.id} onClick={() => setSelectedCard(card)} className="flex justify-center cursor-pointer">
-              <GameCard card={card} size="lg" isSelected={selectedCard?.id === card.id} />
+              <GameCard unit={makeDummyUnit(card)} />
             </div>
           ))}
         </div>
@@ -90,7 +110,7 @@ export default function CollectionPage() {
         <div className="w-80 p-6 flex flex-col gap-4 shrink-0"
           style={{ background: 'hsl(220 30% 8%)', borderLeft: '1px solid hsl(220 20% 18%)' }}>
           <div className="flex justify-center">
-            <GameCard card={selectedCard} size="lg" />
+            <GameCard unit={makeDummyUnit(selectedCard)} />
           </div>
           <h2 className="font-cinzel font-bold text-lg text-center" style={{ color: 'hsl(42 50% 54%)' }}>
             {selectedCard.name}
@@ -109,7 +129,7 @@ export default function CollectionPage() {
           </div>
           {selectedCard.cardType === 'UNIT' && (
             <div className="text-center text-sm font-crimson" style={{ color: 'hsl(38 40% 75%)' }}>
-              ATK {selectedCard.atk} · HP {selectedCard.hp} · Vitesse {selectedCard.speed} · Coût {selectedCard.cost}
+              ATK {selectedCard.atk} · HP {selectedCard.hp} · Attente {selectedCard.speed} · Coût {selectedCard.cost}
             </div>
           )}
           {selectedCard.effects.length > 0 && (
@@ -118,9 +138,7 @@ export default function CollectionPage() {
               {selectedCard.effects.map((eff, i) => (
                 <div key={i} className="text-xs font-crimson" style={{ color: 'hsl(38 40% 75%)' }}>
                   <span className="font-bold">{eff.code}{eff.value > 0 ? `(${eff.value})` : ''}</span>
-                  <span className="ml-1" style={{ color: 'hsl(213 15% 55%)' }}>
-                    — {EFFECT_DESCS[eff.code] || ''}
-                  </span>
+                  <span className="ml-1" style={{ color: 'hsl(213 15% 55%)' }}>— {EFFECT_DESCS[eff.code] || ''}</span>
                 </div>
               ))}
             </div>
