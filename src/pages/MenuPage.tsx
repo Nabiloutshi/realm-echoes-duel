@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { AIDifficulty } from '@/engine/types';
 
 const DIFFICULTIES: { key: AIDifficulty; label: string; desc: string }[] = [
-  { key: 'NOVICE', label: 'NOVICE', desc: '40% d\'actions aléatoires' },
-  { key: 'SCHOLAR', label: 'ÉRUDIT', desc: 'Heuristique intelligente' },
-  { key: 'MASTER', label: 'MAÎTRE', desc: 'Anticipation avancée' },
+  { key: 'NOVICE', label: 'NOVICE', desc: 'Adversaire faible' },
+  { key: 'SCHOLAR', label: 'ÉRUDIT', desc: 'Adversaire équilibré' },
+  { key: 'MASTER', label: 'MAÎTRE', desc: 'Adversaire redoutable' },
 ];
 
 export default function MenuPage() {
@@ -16,7 +16,7 @@ export default function MenuPage() {
     <div className="min-h-screen flex flex-col items-center justify-center relative"
       style={{ background: 'hsl(220 40% 4%)' }}>
 
-      {/* Background glow */}
+      {/* Background glows */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-5"
           style={{ background: 'radial-gradient(circle, hsl(22 78% 57%), transparent)' }} />
@@ -46,50 +46,43 @@ export default function MenuPage() {
           <div className="w-80 rounded-xl p-6 flex flex-col gap-4"
             style={{ background: 'hsl(220 30% 10%)', border: '1px solid hsl(220 20% 18%)' }}>
             <h2 className="font-cinzel font-bold text-lg" style={{ color: 'hsl(42 50% 54%)' }}>
-              NOUVELLE PARTIE
+              COMBATTRE
             </h2>
 
-            <div className="flex flex-col gap-1">
-              <span className="text-xs font-cinzel" style={{ color: 'hsl(213 15% 55%)' }}>
-                Faction: SOLARI ☀ vs UMBRA ☽
-              </span>
+            <div className="font-crimson text-sm" style={{ color: 'hsl(38 40% 75%)' }}>
+              Lancez un combat automatique. Vos créatures Solari affrontent les forces Umbra!
             </div>
 
             <div className="flex flex-col gap-2">
               <span className="text-xs font-cinzel" style={{ color: 'hsl(213 15% 55%)' }}>
-                Difficulté IA
+                Difficulté
               </span>
               {DIFFICULTIES.map(d => (
-                <button
-                  key={d.key}
-                  onClick={() => setDifficulty(d.key)}
+                <button key={d.key} onClick={() => setDifficulty(d.key)}
                   className="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all"
                   style={{
                     background: difficulty === d.key ? 'hsl(42 50% 54% / 0.15)' : 'hsl(220 20% 15%)',
                     border: `1px solid ${difficulty === d.key ? 'hsl(42 50% 54%)' : 'hsl(220 20% 22%)'}`,
                     color: difficulty === d.key ? 'hsl(42 50% 54%)' : 'hsl(38 40% 75%)',
-                  }}
-                >
+                  }}>
                   <span className="font-cinzel font-semibold">{d.label}</span>
                   <span className="text-[10px]" style={{ color: 'hsl(213 15% 55%)' }}>{d.desc}</span>
                 </button>
               ))}
             </div>
 
-            <button
-              onClick={() => navigate(`/game?difficulty=${difficulty}`)}
+            <button onClick={() => navigate(`/game?difficulty=${difficulty}`)}
               className="mt-2 w-full py-3 rounded-lg font-cinzel font-bold text-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
                 background: 'linear-gradient(135deg, hsl(42 50% 54%), hsl(42 60% 40%))',
                 color: 'hsl(220 40% 4%)',
                 boxShadow: '0 0 20px hsl(42 50% 54% / 0.3)',
-              }}
-            >
+              }}>
               ⚔ COMMENCER
             </button>
           </div>
 
-          {/* Info panel */}
+          {/* How to play */}
           <div className="w-72 rounded-xl p-6 flex flex-col gap-4"
             style={{ background: 'hsl(220 30% 10%)', border: '1px solid hsl(220 20% 18%)' }}>
             <h2 className="font-cinzel font-bold text-lg" style={{ color: 'hsl(42 50% 54%)' }}>
@@ -97,28 +90,27 @@ export default function MenuPage() {
             </h2>
             <div className="flex flex-col gap-3 text-sm font-crimson" style={{ color: 'hsl(38 40% 75%)' }}>
               <p>
-                <span className="font-cinzel text-xs" style={{ color: 'hsl(22 78% 57%)' }}>☀ SOLARI</span> — 
+                <span className="font-cinzel text-xs" style={{ color: 'hsl(22 78% 57%)' }}>☀ SOLARI</span> —
                 Faction défensive. Boucliers, soins, bénédictions.
               </p>
               <p>
-                <span className="font-cinzel text-xs" style={{ color: 'hsl(270 60% 55%)' }}>☽ UMBRA</span> — 
+                <span className="font-cinzel text-xs" style={{ color: 'hsl(270 60% 55%)' }}>☽ UMBRA</span> —
                 Faction agressive. Poison, invocations, vol de vie.
               </p>
               <hr style={{ borderColor: 'hsl(220 20% 18%)' }} />
               <p className="text-xs" style={{ color: 'hsl(213 15% 55%)' }}>
-                Chaque tour: Pioche → Ressource → Principale (jouer cartes) → Combat (attaquer) → Effets → Fin.
+                Le combat est <strong>automatique</strong>. Vos créatures attaquent chaque round.
+                Chaque créature a un compteur d'attente — elle attaque quand il atteint 0.
               </p>
               <p className="text-xs" style={{ color: 'hsl(213 15% 55%)' }}>
-                Réduisez les PV adverses à 0 pour gagner!
+                Réduisez les PV du héros adversaire à 0 pour gagner!
               </p>
             </div>
 
             <div className="flex gap-2 mt-auto">
-              <button
-                onClick={() => navigate('/collection')}
+              <button onClick={() => navigate('/collection')}
                 className="flex-1 py-2 rounded-lg font-cinzel text-xs transition-all hover:scale-[1.02]"
-                style={{ background: 'hsl(220 20% 15%)', border: '1px solid hsl(220 20% 22%)', color: 'hsl(38 40% 75%)' }}
-              >
+                style={{ background: 'hsl(220 20% 15%)', border: '1px solid hsl(220 20% 22%)', color: 'hsl(38 40% 75%)' }}>
                 📖 Collection
               </button>
             </div>
