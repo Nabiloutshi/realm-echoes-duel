@@ -1,4 +1,4 @@
-import { HeroState, HeroFloatingNumber } from '@/engine/types';
+import { HeroState, HeroFloatingNumber, RACE_INFO } from '@/engine/types';
 
 interface PlayerInfoProps {
   heroState: HeroState;
@@ -9,8 +9,8 @@ interface PlayerInfoProps {
 export default function PlayerInfo({ heroState, isPlayer = false, floatingNumbers = [] }: PlayerInfoProps) {
   const { hero, currentHp, maxHp, level } = heroState;
   const hpPercent = Math.max(0, (currentHp / maxHp) * 100);
-  const isSolari = hero.faction === 'SOLARI';
-  const factionColor = isSolari ? 'hsl(var(--solari))' : 'hsl(var(--umbra))';
+  const raceInfo = RACE_INFO[hero.race];
+  const raceColor = raceInfo.color;
 
   return (
     <div className="flex flex-col items-center gap-2 relative">
@@ -27,18 +27,27 @@ export default function PlayerInfo({ heroState, isPlayer = false, floatingNumber
       ))}
 
       {/* Hero name */}
-      <div className="font-cinzel text-[10px] tracking-wider" style={{ color: factionColor }}>
+      <div className="font-cinzel text-[10px] tracking-wider" style={{ color: raceColor }}>
         {hero.name}
       </div>
 
       {/* Hero portrait */}
       <div className="relative" style={{
         width: 140, height: 200, borderRadius: 8,
-        border: `3px solid ${factionColor}`,
-        boxShadow: `0 0 20px ${factionColor}40, inset 0 0 15px ${factionColor}20`,
+        border: `3px solid ${raceColor}`,
+        boxShadow: `0 0 20px ${raceColor}40, inset 0 0 15px ${raceColor}20`,
         overflow: 'hidden',
-        background: isSolari ? 'linear-gradient(135deg, #2a1a0a, #1a0e05)' : 'linear-gradient(135deg, #1a0a2e, #0d0518)',
+        background: 'linear-gradient(135deg, #1a1520, #0d0a15)',
       }}>
+        {/* Hero art */}
+        {hero.artUrl ? (
+          <img src={hero.artUrl} alt={hero.name} className="absolute inset-0 w-full h-full object-cover" />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span style={{ fontSize: 60, opacity: 0.4 }}>{raceInfo.icon}</span>
+          </div>
+        )}
+
         {/* LV badge */}
         <div className="absolute top-1 left-1 z-10" style={{
           width: 30, height: 30, borderRadius: '50%',
@@ -54,11 +63,6 @@ export default function PlayerInfo({ heroState, isPlayer = false, floatingNumber
           {[1,2,3,4,5].map(i => (
             <span key={i} style={{ color: '#f0c040', fontSize: 10, textShadow: '0 0 4px #f0c040' }}>★</span>
           ))}
-        </div>
-
-        {/* Faction symbol */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span style={{ fontSize: 60, opacity: 0.4 }}>{isSolari ? '☀' : '☽'}</span>
         </div>
 
         {/* HP at bottom */}

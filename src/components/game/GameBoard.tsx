@@ -1,4 +1,4 @@
-import { GameState, FloatingNumber } from '@/engine/types';
+import { GameState, FloatingNumber, RACE_INFO } from '@/engine/types';
 import GameCard from './GameCard';
 
 interface GameBoardProps {
@@ -6,13 +6,16 @@ interface GameBoardProps {
 }
 
 export default function GameBoard({ state }: GameBoardProps) {
+  const oppRace = state.opponent.hero.hero.race;
+  const plrRace = state.player.hero.hero.race;
+
   return (
     <div className="flex-1 flex flex-col justify-center items-center relative overflow-hidden board-grid"
       style={{ background: 'linear-gradient(180deg, #080b12 0%, #0d1220 50%, #080b12 100%)' }}>
 
       {/* Opponent territory label */}
       <div className="font-cinzel text-[10px] tracking-[3px] mb-2"
-        style={{ color: 'hsl(var(--umbra) / 0.5)' }}>
+        style={{ color: `${RACE_INFO[oppRace].color}80` }}>
         TERRITOIRE ENNEMI
       </div>
 
@@ -20,7 +23,7 @@ export default function GameBoard({ state }: GameBoardProps) {
       <div className="flex gap-2 mb-4">
         {state.opponent.board.map((unit, i) => (
           <div key={`opp-${i}`} className="relative">
-            {unit ? <GameCard unit={unit} /> : <EmptySlot faction="UMBRA" />}
+            {unit ? <GameCard unit={unit} /> : <EmptySlot raceColor={RACE_INFO[oppRace].color} icon={RACE_INFO[oppRace].icon} />}
             {state.floatingNumbers
               .filter(f => f.side === 'opponent' && f.slotIndex === i)
               .map(f => <FloatingNum key={f.id} data={f} />)}
@@ -41,7 +44,7 @@ export default function GameBoard({ state }: GameBoardProps) {
       <div className="flex gap-2 mt-4">
         {state.player.board.map((unit, i) => (
           <div key={`plr-${i}`} className="relative">
-            {unit ? <GameCard unit={unit} /> : <EmptySlot faction="SOLARI" />}
+            {unit ? <GameCard unit={unit} /> : <EmptySlot raceColor={RACE_INFO[plrRace].color} icon={RACE_INFO[plrRace].icon} />}
             {state.floatingNumbers
               .filter(f => f.side === 'player' && f.slotIndex === i)
               .map(f => <FloatingNum key={f.id} data={f} />)}
@@ -51,27 +54,26 @@ export default function GameBoard({ state }: GameBoardProps) {
 
       {/* Player territory label */}
       <div className="font-cinzel text-[10px] tracking-[3px] mt-2"
-        style={{ color: 'hsl(var(--solari) / 0.5)' }}>
+        style={{ color: `${RACE_INFO[plrRace].color}80` }}>
         VOTRE TERRITOIRE
       </div>
     </div>
   );
 }
 
-function EmptySlot({ faction }: { faction: 'SOLARI' | 'UMBRA' }) {
-  const color = faction === 'SOLARI' ? 'hsl(var(--solari))' : 'hsl(var(--umbra))';
+function EmptySlot({ raceColor, icon }: { raceColor: string; icon: string }) {
   return (
     <div className="flex items-center justify-center"
       style={{
         width: 140, height: 195, borderRadius: 6,
-        border: `1px dashed ${color}30`, background: '#0a0e1840',
+        border: `1px dashed ${raceColor}30`, background: '#0a0e1840',
       }}>
       <div style={{
         width: 50, height: 50, borderRadius: '50%',
-        border: `1px solid ${color}20`,
+        border: `1px solid ${raceColor}20`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <span style={{ color: `${color}30`, fontSize: 20 }}>✦</span>
+        <span style={{ color: `${raceColor}30`, fontSize: 20 }}>{icon}</span>
       </div>
     </div>
   );

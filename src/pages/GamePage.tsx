@@ -13,17 +13,17 @@ export default function GamePage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const difficulty = (searchParams.get('difficulty') || 'SCHOLAR') as AIDifficulty;
+  const heroId = searchParams.get('hero');
 
   const { gameState, isAnimating, startGame, endRound, toggleAuto, toggleSpeed } = useGame();
 
   useEffect(() => {
     if (!gameState) {
-      // Auto-start with default Solari hero and top 5 units
-      const solariHeroes = HEROES.filter(h => h.faction === 'SOLARI');
-      const hero = solariHeroes[0];
-      const solariUnits = ALL_CARDS.filter(c => c.faction === 'SOLARI' && c.cardType === 'UNIT');
-      const sorted = [...solariUnits].sort((a, b) => (b.atk * 2 + b.hp) - (a.atk * 2 + a.hp));
-      startGame(hero, sorted.slice(0, 5), difficulty);
+      const hero = heroId ? HEROES.find(h => h.id === heroId) : HEROES[0];
+      const selectedHero = hero || HEROES[0];
+      const raceUnits = ALL_CARDS.filter(c => c.race === selectedHero.race);
+      const sorted = [...raceUnits].sort((a, b) => (b.atk * 2 + b.hp) - (a.atk * 2 + a.hp));
+      startGame(selectedHero, sorted.slice(0, 5), difficulty);
     }
   }, []);
 
@@ -42,8 +42,6 @@ export default function GamePage() {
           isPlayer
           floatingNumbers={gameState.heroFloatingNumbers.filter(f => f.side === 'player')}
         />
-
-        {/* Player name */}
         <div className="mt-3 font-cinzel text-[11px] tracking-wider" style={{ color: 'hsl(var(--foreground))' }}>
           Joueur
         </div>
@@ -60,25 +58,17 @@ export default function GamePage() {
           background: 'linear-gradient(180deg, #0a0e18, #080b12)',
           borderLeft: '2px solid #1a2235',
         }}>
-        {/* Opponent name */}
         <div className="text-center pt-2 font-cinzel text-[10px] tracking-wider" style={{ color: 'hsl(var(--muted-foreground))' }}>
           {gameState.opponent.hero.hero.name}
         </div>
-
-        {/* Opponent Hero */}
         <div className="flex flex-col items-center py-2">
           <PlayerInfo
             heroState={gameState.opponent.hero}
             floatingNumbers={gameState.heroFloatingNumbers.filter(f => f.side === 'opponent')}
           />
         </div>
-
-        {/* Divider */}
         <div className="mx-4 h-px" style={{ background: '#1a2235' }} />
-
-        {/* Controls */}
         <div className="flex flex-col items-center gap-3 py-4">
-          {/* Auto button */}
           <button onClick={toggleAuto}
             className="font-cinzel text-xs font-bold px-4 py-2 rounded-full transition-all"
             style={{
@@ -88,8 +78,6 @@ export default function GamePage() {
             }}>
             Auto
           </button>
-
-          {/* Round counter */}
           <div className="flex items-center justify-center"
             style={{
               width: 48, height: 48, borderRadius: '50%',
@@ -98,8 +86,6 @@ export default function GamePage() {
             }}>
             {gameState.round}
           </div>
-
-          {/* End Round button */}
           <button onClick={endRound}
             disabled={isAnimating || gameState.status !== 'PLAYING'}
             className="font-cinzel text-xs font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
@@ -113,8 +99,6 @@ export default function GamePage() {
             <span style={{ fontSize: 20 }}>▶</span>
             <span style={{ fontSize: 8, marginTop: 2 }}>End Round</span>
           </button>
-
-          {/* Fast Fwd */}
           <button onClick={toggleSpeed}
             className="font-cinzel text-[10px] px-3 py-1 rounded transition-all"
             style={{
@@ -125,11 +109,7 @@ export default function GamePage() {
             Fast Fwd
           </button>
         </div>
-
-        {/* Divider */}
         <div className="mx-4 h-px" style={{ background: '#1a2235' }} />
-
-        {/* Event Log */}
         <div className="flex-1 min-h-0">
           <EventLog events={gameState.events} />
         </div>
@@ -138,10 +118,11 @@ export default function GamePage() {
       <GameOverOverlay
         status={gameState.status}
         onNewGame={() => {
-          const solariHeroes = HEROES.filter(h => h.faction === 'SOLARI');
-          const solariUnits = ALL_CARDS.filter(c => c.faction === 'SOLARI' && c.cardType === 'UNIT');
-          const sorted = [...solariUnits].sort((a, b) => (b.atk * 2 + b.hp) - (a.atk * 2 + a.hp));
-          startGame(solariHeroes[0], sorted.slice(0, 5), difficulty);
+          const hero = heroId ? HEROES.find(h => h.id === heroId) : HEROES[0];
+          const selectedHero = hero || HEROES[0];
+          const raceUnits = ALL_CARDS.filter(c => c.race === selectedHero.race);
+          const sorted = [...raceUnits].sort((a, b) => (b.atk * 2 + b.hp) - (a.atk * 2 + a.hp));
+          startGame(selectedHero, sorted.slice(0, 5), difficulty);
         }}
         onMenu={() => navigate('/')}
       />

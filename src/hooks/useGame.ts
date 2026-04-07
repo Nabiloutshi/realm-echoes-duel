@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { GameState, CardDefinition, AIDifficulty, HeroDefinition } from '@/engine/types';
+import { GameState, CardDefinition, AIDifficulty, HeroDefinition, Race } from '@/engine/types';
 import { createGame, processRound } from '@/engine/gameEngine';
 import { ALL_CARDS } from '@/data/cards';
 import { HEROES } from '@/data/heroes';
@@ -14,21 +14,25 @@ export function useGame() {
     playerHero: HeroDefinition,
     playerCards: CardDefinition[],
     difficulty: AIDifficulty,
+    opponentRace?: Race,
   ) => {
-    const umbraHeroes = HEROES.filter(h => h.faction === 'UMBRA');
-    const aiHero = umbraHeroes[Math.floor(Math.random() * umbraHeroes.length)];
-    const umbraUnits = ALL_CARDS.filter(c => c.faction === 'UMBRA' && c.cardType === 'UNIT');
+    // Pick opponent from a different race
+    const oppRace = opponentRace || (['HUMAINS_NAINS', 'ELFES', 'ORCS_TROLLS', 'GOBELINS_GNOLLS'] as Race[])
+      .filter(r => r !== playerHero.race)[Math.floor(Math.random() * 3)];
+    const oppHeroes = HEROES.filter(h => h.race === oppRace);
+    const aiHero = oppHeroes[Math.floor(Math.random() * oppHeroes.length)];
+    const oppUnits = ALL_CARDS.filter(c => c.race === oppRace);
     let aiCards: CardDefinition[];
 
     if (difficulty === 'NOVICE') {
-      aiCards = [...umbraUnits].sort(() => Math.random() - 0.5).slice(0, 5);
+      aiCards = [...oppUnits].sort(() => Math.random() - 0.5).slice(0, 5);
     } else if (difficulty === 'SCHOLAR') {
-      aiCards = [...umbraUnits].sort((a, b) => {
+      aiCards = [...oppUnits].sort((a, b) => {
         const r: Record<string, number> = { COMMON: 0, RARE: 1, EPIC: 2, LEGENDARY: 3 };
         return r[b.rarity] - r[a.rarity];
       }).slice(0, 5);
     } else {
-      aiCards = [...umbraUnits].sort((a, b) => (b.atk * 2 + b.hp) - (a.atk * 2 + a.hp)).slice(0, 5);
+      aiCards = [...oppUnits].sort((a, b) => (b.atk * 2 + b.hp) - (a.atk * 2 + a.hp)).slice(0, 5);
     }
 
     const state = createGame(playerHero, playerCards, aiHero, aiCards, difficulty);
