@@ -1,40 +1,88 @@
 import { HeroDefinition } from '@/engine/types';
+import heroHn1 from '@/assets/heroes/hero-hn-1.jpg';
+import heroHn2 from '@/assets/heroes/hero-hn-2.jpg';
+import heroElf1 from '@/assets/heroes/hero-elf-1.jpg';
+import heroElf2 from '@/assets/heroes/hero-elf-2.jpg';
+import heroOt1 from '@/assets/heroes/hero-ot-1.jpg';
+import heroOt2 from '@/assets/heroes/hero-ot-2.jpg';
+import heroGg1 from '@/assets/heroes/hero-gg-1.jpg';
+import heroGg2 from '@/assets/heroes/hero-gg-2.jpg';
 
 export const HEROES: HeroDefinition[] = [
   {
-    id: 'hero-solari-1',
-    name: 'Stormkallar',
-    faction: 'SOLARI',
-    hp: 3000,
-    skillName: 'Bénédiction Solaire',
-    skillDescription: 'Restaure 100 PV à toutes les créatures alliées.',
+    id: 'hero-hn-1',
+    name: 'Tharion le Juste',
+    race: 'HUMAINS_NAINS',
+    hp: 14000,
+    skillName: 'Rempart Inébranlable',
+    skillDescription: 'Ajoute 200 de bouclier à toutes les créatures alliées.',
+    artUrl: heroHn1,
   },
   {
-    id: 'hero-solari-2',
-    name: 'Aurelia',
-    faction: 'SOLARI',
-    hp: 2800,
-    skillName: 'Bouclier Divin',
-    skillDescription: 'Ajoute 50 de bouclier à toutes les créatures alliées.',
+    id: 'hero-hn-2',
+    name: 'Brunhild Forgeflamme',
+    race: 'HUMAINS_NAINS',
+    hp: 15000,
+    skillName: 'Marteau Ancestral',
+    skillDescription: "Inflige 300 dégâts à l'ennemi le plus puissant.",
+    artUrl: heroHn2,
   },
   {
-    id: 'hero-umbra-1',
-    name: 'Mort-vivant',
-    faction: 'UMBRA',
-    hp: 3200,
-    skillName: 'Volonté Mortis',
-    skillDescription: "Augmente l'ATQ de toutes les créatures de 50 pendant 1 tour.",
+    id: 'hero-elf-1',
+    name: 'Sylendris Lunargent',
+    race: 'ELFES',
+    hp: 12000,
+    skillName: 'Chant de la Forêt',
+    skillDescription: 'Restaure 250 PV à toutes les créatures alliées.',
+    artUrl: heroElf1,
   },
   {
-    id: 'hero-umbra-2',
-    name: 'Nécrosa',
-    faction: 'UMBRA',
-    hp: 2600,
-    skillName: 'Drain Vital',
-    skillDescription: 'Inflige 80 dégâts au héros ennemi et restaure 80 PV.',
+    id: 'hero-elf-2',
+    name: 'Morvael Ombresylve',
+    race: 'ELFES',
+    hp: 13000,
+    skillName: 'Flèche Crépusculaire',
+    skillDescription: 'Inflige 200 dégâts à 2 ennemis aléatoires.',
+    artUrl: heroElf2,
+  },
+  {
+    id: 'hero-ot-1',
+    name: "Grok'thar Briseciel",
+    race: 'ORCS_TROLLS',
+    hp: 16000,
+    skillName: 'Cri de Guerre',
+    skillDescription: "Augmente l'ATQ de toutes les créatures de 150 pendant 1 tour.",
+    artUrl: heroOt1,
+  },
+  {
+    id: 'hero-ot-2',
+    name: 'Zul\'marak le Régénéré',
+    race: 'ORCS_TROLLS',
+    hp: 14500,
+    skillName: 'Régénération Trollesque',
+    skillDescription: 'Restaure 500 PV au héros et 100 PV à chaque créature.',
+    artUrl: heroOt2,
+  },
+  {
+    id: 'hero-gg-1',
+    name: 'Skritch Doigts-Vifs',
+    race: 'GOBELINS_GNOLLS',
+    hp: 11000,
+    skillName: 'Piège Explosif',
+    skillDescription: 'Inflige 150 dégâts à toutes les créatures ennemies.',
+    artUrl: heroGg1,
+  },
+  {
+    id: 'hero-gg-2',
+    name: 'Fenrak Crocs-Noirs',
+    race: 'GOBELINS_GNOLLS',
+    hp: 13500,
+    skillName: 'Morsure Empoisonnée',
+    skillDescription: 'Empoisonne toutes les créatures ennemies (2 stacks).',
+    artUrl: heroGg2,
   },
 ];
 
-export function getHeroesByFaction(faction: 'SOLARI' | 'UMBRA') {
-  return HEROES.filter(h => h.faction === faction);
+export function getHeroesByRace(race: string) {
+  return HEROES.filter(h => h.race === race);
 }

@@ -1,123 +1,209 @@
-import { CardDefinition, Faction } from '@/engine/types';
+import { CardDefinition, Race } from '@/engine/types';
 
 export const ALL_CARDS: CardDefinition[] = [
-  // ═══ SOLARI UNITS ═══
+  // ═══════════════════════════════════════
+  // HUMAINS & NAINS — Défensifs, boucliers
+  // ═══════════════════════════════════════
   {
-    id: 'sol-01', slug: 'gardien-aube', name: "Gardien de l'Aube",
-    faction: 'SOLARI', rarity: 'COMMON', cardType: 'UNIT',
-    cost: 2, atk: 2, hp: 5, speed: 2,
+    id: 'hn-01', slug: 'gardien-muraille', name: 'Gardien de la Muraille',
+    race: 'HUMAINS_NAINS', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 2, atk: 3, hp: 6, speed: 2,
     effects: [{ code: 'SHIELD', value: 3, trigger: 'ON_ENTER' }],
   },
   {
-    id: 'sol-02', slug: 'pretresse-solara', name: 'Prêtresse Solara',
-    faction: 'SOLARI', rarity: 'RARE', cardType: 'UNIT',
-    cost: 3, atk: 1, hp: 6, speed: 2,
+    id: 'hn-02', slug: 'clerc-lumiere', name: 'Clerc de Lumière',
+    race: 'HUMAINS_NAINS', rarity: 'RARE', cardType: 'UNIT',
+    cost: 3, atk: 2, hp: 7, speed: 2,
     effects: [{ code: 'HEAL', value: 3, trigger: 'PER_TURN' }],
   },
   {
-    id: 'sol-03', slug: 'chevalier-soleil', name: 'Chevalier du Soleil',
-    faction: 'SOLARI', rarity: 'RARE', cardType: 'UNIT',
-    cost: 4, atk: 5, hp: 7, speed: 3,
+    id: 'hn-03', slug: 'chevalier-couronne', name: 'Chevalier de la Couronne',
+    race: 'HUMAINS_NAINS', rarity: 'RARE', cardType: 'UNIT',
+    cost: 4, atk: 5, hp: 8, speed: 3,
     effects: [
       { code: 'TAUNT', value: 0, trigger: 'PASSIVE' },
       { code: 'RIPOSTE', value: 2, trigger: 'ON_DEFEND' },
     ],
   },
   {
-    id: 'sol-04', slug: 'seraphin-eternel', name: 'Séraphin Éternel',
-    faction: 'SOLARI', rarity: 'EPIC', cardType: 'UNIT',
-    cost: 6, atk: 6, hp: 10, speed: 3,
-    effects: [
-      { code: 'IMMOVABLE', value: 0, trigger: 'PASSIVE' },
-      { code: 'BLESSING', value: 2, trigger: 'ON_ENTER' },
-      { code: 'REBIRTH', value: 4, trigger: 'ON_DEATH' },
-    ],
-  },
-  {
-    id: 'sol-05', slug: 'eclaireur-solaire', name: 'Éclaireur Solaire',
-    faction: 'SOLARI', rarity: 'COMMON', cardType: 'UNIT',
-    cost: 1, atk: 2, hp: 2, speed: 3, effects: [],
-  },
-  {
-    id: 'sol-06', slug: 'vierge-bouclier', name: 'Vierge Bouclier',
-    faction: 'SOLARI', rarity: 'COMMON', cardType: 'UNIT',
-    cost: 2, atk: 1, hp: 6, speed: 2,
-    effects: [{ code: 'TAUNT', value: 0, trigger: 'PASSIVE' }],
-  },
-  {
-    id: 'sol-07', slug: 'archer-aube', name: "Archer de l'Aube",
-    faction: 'SOLARI', rarity: 'COMMON', cardType: 'UNIT',
-    cost: 2, atk: 3, hp: 3, speed: 3, effects: [],
-  },
-  {
-    id: 'sol-08', slug: 'paladin-solaire', name: 'Paladin Solaire',
-    faction: 'SOLARI', rarity: 'RARE', cardType: 'UNIT',
-    cost: 3, atk: 3, hp: 6, speed: 2,
-    effects: [
-      { code: 'SHIELD', value: 2, trigger: 'ON_ENTER' },
-      { code: 'TAUNT', value: 0, trigger: 'PASSIVE' },
-    ],
-  },
-  {
-    id: 'sol-09', slug: 'rempart-dore', name: 'Rempart Doré',
-    faction: 'SOLARI', rarity: 'RARE', cardType: 'UNIT',
-    cost: 4, atk: 2, hp: 10, speed: 1,
-    effects: [
-      { code: 'TAUNT', value: 0, trigger: 'PASSIVE' },
-      { code: 'SHIELD', value: 2, trigger: 'ON_ENTER' },
-    ],
-  },
-  {
-    id: 'sol-10', slug: 'heraut-solaire', name: 'Héraut Solaire',
-    faction: 'SOLARI', rarity: 'COMMON', cardType: 'UNIT',
-    cost: 3, atk: 2, hp: 4, speed: 2,
+    id: 'hn-04', slug: 'forgeron-nain', name: 'Forgeron Nain',
+    race: 'HUMAINS_NAINS', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 2, atk: 2, hp: 5, speed: 2,
     effects: [{ code: 'BLESSING', value: 1, trigger: 'ON_ENTER' }],
   },
   {
-    id: 'sol-11', slug: 'aureus-lame-sacree', name: 'Aureus Lame Sacrée',
-    faction: 'SOLARI', rarity: 'LEGENDARY', cardType: 'UNIT',
-    cost: 8, atk: 10, hp: 15, speed: 4,
+    id: 'hn-05', slug: 'fantassin-royal', name: 'Fantassin Royal',
+    race: 'HUMAINS_NAINS', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 1, atk: 3, hp: 3, speed: 3, effects: [],
+  },
+  {
+    id: 'hn-06', slug: 'paladin-serment', name: 'Paladin du Serment',
+    race: 'HUMAINS_NAINS', rarity: 'EPIC', cardType: 'UNIT',
+    cost: 6, atk: 6, hp: 12, speed: 3,
     effects: [
-      { code: 'DOUBLE_STRIKE', value: 0, trigger: 'PASSIVE' },
+      { code: 'TAUNT', value: 0, trigger: 'PASSIVE' },
+      { code: 'SHIELD', value: 4, trigger: 'ON_ENTER' },
+      { code: 'REBIRTH', value: 5, trigger: 'ON_DEATH' },
+    ],
+  },
+  {
+    id: 'hn-07', slug: 'arbaletrier-rempart', name: 'Arbalétrier du Rempart',
+    race: 'HUMAINS_NAINS', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 2, atk: 4, hp: 3, speed: 3, effects: [],
+  },
+  {
+    id: 'hn-08', slug: 'seigneur-montagne', name: 'Seigneur de la Montagne',
+    race: 'HUMAINS_NAINS', rarity: 'LEGENDARY', cardType: 'UNIT',
+    cost: 8, atk: 8, hp: 16, speed: 4,
+    effects: [
       { code: 'IMMOVABLE', value: 0, trigger: 'PASSIVE' },
+      { code: 'BLESSING', value: 3, trigger: 'ON_ENTER' },
+      { code: 'DOUBLE_STRIKE', value: 0, trigger: 'PASSIVE' },
+    ],
+  },
+
+  // ═══════════════════════════════════════
+  // ELFES — Soins, furtivité, agilité
+  // ═══════════════════════════════════════
+  {
+    id: 'elf-01', slug: 'archer-sylvestre', name: 'Archer Sylvestre',
+    race: 'ELFES', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 2, atk: 4, hp: 3, speed: 4, effects: [],
+  },
+  {
+    id: 'elf-02', slug: 'druidesse-bosquet', name: 'Druidesse du Bosquet',
+    race: 'ELFES', rarity: 'RARE', cardType: 'UNIT',
+    cost: 3, atk: 2, hp: 6, speed: 2,
+    effects: [{ code: 'HEAL', value: 4, trigger: 'PER_TURN' }],
+  },
+  {
+    id: 'elf-03', slug: 'lame-crepuscule', name: 'Lame du Crépuscule',
+    race: 'ELFES', rarity: 'RARE', cardType: 'UNIT',
+    cost: 3, atk: 5, hp: 4, speed: 4,
+    effects: [
+      { code: 'STEALTH', value: 0, trigger: 'PASSIVE' },
+      { code: 'DOUBLE_STRIKE', value: 0, trigger: 'PASSIVE' },
+    ],
+  },
+  {
+    id: 'elf-04', slug: 'gardien-racines', name: 'Gardien des Racines',
+    race: 'ELFES', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 2, atk: 2, hp: 7, speed: 2,
+    effects: [{ code: 'TAUNT', value: 0, trigger: 'PASSIVE' }],
+  },
+  {
+    id: 'elf-05', slug: 'tisseuse-lune', name: 'Tisseuse de Lune',
+    race: 'ELFES', rarity: 'EPIC', cardType: 'UNIT',
+    cost: 5, atk: 4, hp: 9, speed: 3,
+    effects: [
+      { code: 'HEAL', value: 3, trigger: 'PER_TURN' },
+      { code: 'BLESSING', value: 2, trigger: 'ON_ENTER' },
+    ],
+  },
+  {
+    id: 'elf-06', slug: 'assassin-nuit', name: "Assassin de la Nuit",
+    race: 'ELFES', rarity: 'EPIC', cardType: 'UNIT',
+    cost: 4, atk: 6, hp: 4, speed: 5,
+    effects: [
+      { code: 'STEALTH', value: 0, trigger: 'PASSIVE' },
+      { code: 'POISON', value: 2, trigger: 'ON_ATTACK' },
+    ],
+  },
+  {
+    id: 'elf-07', slug: 'sentinelle-etoiles', name: 'Sentinelle des Étoiles',
+    race: 'ELFES', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 1, atk: 2, hp: 2, speed: 4, effects: [],
+  },
+  {
+    id: 'elf-08', slug: 'reine-sylvaine', name: 'Reine Sylvaine',
+    race: 'ELFES', rarity: 'LEGENDARY', cardType: 'UNIT',
+    cost: 9, atk: 7, hp: 14, speed: 3,
+    effects: [
+      { code: 'HEAL', value: 5, trigger: 'PER_TURN' },
+      { code: 'REBIRTH', value: 6, trigger: 'ON_DEATH' },
       { code: 'BLESSING', value: 3, trigger: 'ON_ENTER' },
     ],
   },
-  // ═══ SOLARI SPELLS/RELICS ═══
+
+  // ═══════════════════════════════════════
+  // ORCS & TROLLS — Rage, force brute
+  // ═══════════════════════════════════════
   {
-    id: 'sol-sp1', slug: 'lumiere-purifiante', name: 'Lumière Purifiante',
-    faction: 'SOLARI', rarity: 'COMMON', cardType: 'SPELL',
-    cost: 2, atk: 0, hp: 0, speed: 0,
-    effects: [{ code: 'HEAL', value: 5, trigger: 'ON_ENTER' }],
+    id: 'ot-01', slug: 'berserker-sang', name: 'Berserker du Sang',
+    race: 'ORCS_TROLLS', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 2, atk: 5, hp: 3, speed: 3,
+    effects: [{ code: 'RAGE', value: 2, trigger: 'ON_ATTACK' }],
   },
   {
-    id: 'sol-sp2', slug: 'frappe-sacree', name: 'Frappe Sacrée',
-    faction: 'SOLARI', rarity: 'COMMON', cardType: 'SPELL',
-    cost: 2, atk: 0, hp: 0, speed: 0,
-    effects: [{ code: 'HEAL', value: 4, trigger: 'ON_ENTER' }],
+    id: 'ot-02', slug: 'chaman-totem', name: 'Chaman au Totem',
+    race: 'ORCS_TROLLS', rarity: 'RARE', cardType: 'UNIT',
+    cost: 3, atk: 3, hp: 5, speed: 2,
+    effects: [{ code: 'HEAL', value: 2, trigger: 'PER_TURN' }],
   },
   {
-    id: 'sol-sp3', slug: 'protection-divine', name: 'Protection Divine',
-    faction: 'SOLARI', rarity: 'COMMON', cardType: 'SPELL',
-    cost: 1, atk: 0, hp: 0, speed: 0,
-    effects: [{ code: 'SHIELD', value: 4, trigger: 'ON_ENTER' }],
+    id: 'ot-03', slug: 'brute-demolisseur', name: 'Brute Démolisseur',
+    race: 'ORCS_TROLLS', rarity: 'RARE', cardType: 'UNIT',
+    cost: 4, atk: 7, hp: 6, speed: 4,
+    effects: [
+      { code: 'RAGE', value: 3, trigger: 'ON_ATTACK' },
+      { code: 'DEATH_BURST', value: 3, trigger: 'ON_DEATH' },
+    ],
   },
   {
-    id: 'sol-rl1', slug: 'sanctuaire-lumiere', name: 'Sanctuaire de Lumière',
-    faction: 'SOLARI', rarity: 'EPIC', cardType: 'RELIC',
-    cost: 4, atk: 0, hp: 0, speed: 0,
-    effects: [{ code: 'SHIELD', value: 1, trigger: 'PER_TURN' }],
+    id: 'ot-04', slug: 'troll-regenerant', name: 'Troll Régénérant',
+    race: 'ORCS_TROLLS', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 3, atk: 3, hp: 8, speed: 2,
+    effects: [{ code: 'REBIRTH', value: 3, trigger: 'ON_DEATH' }],
   },
-  // ═══ UMBRA UNITS ═══
   {
-    id: 'umb-01', slug: 'specter-venimeux', name: 'Spectre Venimeux',
-    faction: 'UMBRA', rarity: 'COMMON', cardType: 'UNIT',
+    id: 'ot-05', slug: 'gueulard-orc', name: 'Gueulard Orc',
+    race: 'ORCS_TROLLS', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 1, atk: 4, hp: 2, speed: 3,
+    effects: [{ code: 'DEATH_BURST', value: 2, trigger: 'ON_DEATH' }],
+  },
+  {
+    id: 'ot-06', slug: 'champion-arene', name: "Champion de l'Arène",
+    race: 'ORCS_TROLLS', rarity: 'EPIC', cardType: 'UNIT',
+    cost: 6, atk: 9, hp: 10, speed: 4,
+    effects: [
+      { code: 'RAGE', value: 4, trigger: 'ON_ATTACK' },
+      { code: 'LIFESTEAL', value: 3, trigger: 'ON_ATTACK' },
+    ],
+  },
+  {
+    id: 'ot-07', slug: 'lancier-clan', name: 'Lancier du Clan',
+    race: 'ORCS_TROLLS', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 2, atk: 4, hp: 4, speed: 3, effects: [],
+  },
+  {
+    id: 'ot-08', slug: 'seigneur-guerre', name: 'Seigneur de Guerre Orc',
+    race: 'ORCS_TROLLS', rarity: 'LEGENDARY', cardType: 'UNIT',
+    cost: 9, atk: 12, hp: 14, speed: 5,
+    effects: [
+      { code: 'RAGE', value: 5, trigger: 'ON_ATTACK' },
+      { code: 'DOUBLE_STRIKE', value: 0, trigger: 'PASSIVE' },
+      { code: 'DEATH_BURST', value: 5, trigger: 'ON_DEATH' },
+    ],
+  },
+
+  // ═══════════════════════════════════════
+  // GOBELINS & GNOLLS — Poison, ruse, essaim
+  // ═══════════════════════════════════════
+  {
+    id: 'gg-01', slug: 'sapeur-gobelin', name: 'Sapeur Gobelin',
+    race: 'GOBELINS_GNOLLS', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 1, atk: 3, hp: 2, speed: 4,
+    effects: [{ code: 'DEATH_BURST', value: 3, trigger: 'ON_DEATH' }],
+  },
+  {
+    id: 'gg-02', slug: 'empoisonneur-gnoll', name: 'Empoisonneur Gnoll',
+    race: 'GOBELINS_GNOLLS', rarity: 'COMMON', cardType: 'UNIT',
     cost: 2, atk: 3, hp: 3, speed: 3,
-    effects: [{ code: 'POISON', value: 1, trigger: 'ON_ATTACK' }],
+    effects: [{ code: 'POISON', value: 2, trigger: 'ON_ATTACK' }],
   },
   {
-    id: 'umb-02', slug: 'tisseuse-ombres', name: "Tisseuse d'Ombres",
-    faction: 'UMBRA', rarity: 'RARE', cardType: 'UNIT',
+    id: 'gg-03', slug: 'invocateur-meute', name: 'Invocateur de Meute',
+    race: 'GOBELINS_GNOLLS', rarity: 'RARE', cardType: 'UNIT',
     cost: 3, atk: 2, hp: 4, speed: 3,
     effects: [
       { code: 'SUMMON', value: 2, trigger: 'ON_ENTER' },
@@ -125,122 +211,53 @@ export const ALL_CARDS: CardDefinition[] = [
     ],
   },
   {
-    id: 'umb-03', slug: 'ravageur-cramoisi', name: 'Ravageur Cramoisi',
-    faction: 'UMBRA', rarity: 'RARE', cardType: 'UNIT',
-    cost: 3, atk: 4, hp: 5, speed: 4,
-    effects: [
-      { code: 'RAGE', value: 3, trigger: 'ON_ATTACK' },
-      { code: 'DEATH_BURST', value: 3, trigger: 'ON_DEATH' },
-    ],
-  },
-  {
-    id: 'umb-04', slug: 'archimage-pestilence', name: 'Archimage de Pestilence',
-    faction: 'UMBRA', rarity: 'EPIC', cardType: 'UNIT',
-    cost: 5, atk: 4, hp: 8, speed: 2,
-    effects: [{ code: 'POISON', value: 2, trigger: 'ON_ENTER' }],
-  },
-  {
-    id: 'umb-05', slug: 'diablotin-ombres', name: 'Diablotin des Ombres',
-    faction: 'UMBRA', rarity: 'COMMON', cardType: 'UNIT',
-    cost: 1, atk: 2, hp: 1, speed: 4,
-    effects: [{ code: 'DEATH_BURST', value: 3, trigger: 'ON_DEATH' }],
-  },
-  {
-    id: 'umb-06', slug: 'porteur-peste', name: 'Porteur de Peste',
-    faction: 'UMBRA', rarity: 'COMMON', cardType: 'UNIT',
-    cost: 2, atk: 2, hp: 3, speed: 2,
-    effects: [{ code: 'POISON', value: 1, trigger: 'ON_ATTACK' }],
-  },
-  {
-    id: 'umb-07', slug: 'traqueur-umbra', name: 'Traqueur Umbra',
-    faction: 'UMBRA', rarity: 'COMMON', cardType: 'UNIT',
-    cost: 2, atk: 3, hp: 3, speed: 4,
+    id: 'gg-04', slug: 'traqueur-gnoll', name: 'Traqueur Gnoll',
+    race: 'GOBELINS_GNOLLS', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 2, atk: 4, hp: 3, speed: 4,
     effects: [{ code: 'STEALTH', value: 0, trigger: 'PASSIVE' }],
   },
   {
-    id: 'umb-08', slug: 'cultiste-vide', name: 'Cultiste du Vide',
-    faction: 'UMBRA', rarity: 'COMMON', cardType: 'UNIT',
-    cost: 3, atk: 3, hp: 4, speed: 2,
-    effects: [{ code: 'RAGE', value: 2, trigger: 'ON_ATTACK' }],
-  },
-  {
-    id: 'umb-09', slug: 'collecteur-os', name: "Collecteur d'Os",
-    faction: 'UMBRA', rarity: 'RARE', cardType: 'UNIT',
-    cost: 4, atk: 4, hp: 5, speed: 3,
-    effects: [
-      { code: 'LIFESTEAL', value: 2, trigger: 'ON_ATTACK' },
-      { code: 'DEATH_BURST', value: 3, trigger: 'ON_DEATH' },
-    ],
-  },
-  {
-    id: 'umb-10', slug: 'heraut-vide', name: 'Héraut du Vide',
-    faction: 'UMBRA', rarity: 'COMMON', cardType: 'UNIT',
-    cost: 3, atk: 2, hp: 5, speed: 2,
-    effects: [{ code: 'SUMMON', value: 1, trigger: 'ON_ENTER' }],
-  },
-  {
-    id: 'umb-11', slug: 'assassin-ombres', name: 'Assassin des Ombres',
-    faction: 'UMBRA', rarity: 'EPIC', cardType: 'UNIT',
-    cost: 4, atk: 5, hp: 4, speed: 5,
-    effects: [
-      { code: 'STEALTH', value: 0, trigger: 'PASSIVE' },
-      { code: 'DOUBLE_STRIKE', value: 0, trigger: 'PASSIVE' },
-    ],
-  },
-  {
-    id: 'umb-12', slug: 'vexar-maitre-neant', name: 'Vexar Maître du Néant',
-    faction: 'UMBRA', rarity: 'LEGENDARY', cardType: 'UNIT',
-    cost: 9, atk: 8, hp: 12, speed: 5,
-    effects: [
-      { code: 'POISON', value: 3, trigger: 'ON_ATTACK' },
-      { code: 'SUMMON', value: 3, trigger: 'ON_DEATH' },
-      { code: 'LIFESTEAL', value: 2, trigger: 'ON_ATTACK' },
-    ],
-  },
-  // ═══ UMBRA SPELLS/RELICS ═══
-  {
-    id: 'umb-sp1', slug: 'brume-toxique', name: 'Brume Toxique',
-    faction: 'UMBRA', rarity: 'COMMON', cardType: 'SPELL',
-    cost: 2, atk: 0, hp: 0, speed: 0,
-    effects: [{ code: 'POISON', value: 2, trigger: 'ON_ENTER' }],
-  },
-  {
-    id: 'umb-sp2', slug: 'pacte-sombre', name: 'Pacte Sombre',
-    faction: 'UMBRA', rarity: 'COMMON', cardType: 'SPELL',
-    cost: 2, atk: 0, hp: 0, speed: 0,
+    id: 'gg-05', slug: 'alchimiste-gobelin', name: 'Alchimiste Gobelin',
+    race: 'GOBELINS_GNOLLS', rarity: 'RARE', cardType: 'UNIT',
+    cost: 3, atk: 3, hp: 5, speed: 3,
     effects: [{ code: 'POISON', value: 3, trigger: 'ON_ENTER' }],
   },
   {
-    id: 'umb-rl1', slug: 'autel-ames-perdues', name: 'Autel des Âmes Perdues',
-    faction: 'UMBRA', rarity: 'EPIC', cardType: 'RELIC',
-    cost: 5, atk: 0, hp: 0, speed: 0,
-    effects: [{ code: 'DEATH_BURST', value: 2, trigger: 'PASSIVE' }],
+    id: 'gg-06', slug: 'hyene-alpha', name: 'Hyène Alpha',
+    race: 'GOBELINS_GNOLLS', rarity: 'EPIC', cardType: 'UNIT',
+    cost: 5, atk: 6, hp: 7, speed: 4,
+    effects: [
+      { code: 'POISON', value: 2, trigger: 'ON_ATTACK' },
+      { code: 'LIFESTEAL', value: 2, trigger: 'ON_ATTACK' },
+    ],
+  },
+  {
+    id: 'gg-07', slug: 'pillard-gobelin', name: 'Pillard Gobelin',
+    race: 'GOBELINS_GNOLLS', rarity: 'COMMON', cardType: 'UNIT',
+    cost: 2, atk: 3, hp: 3, speed: 3,
+    effects: [{ code: 'CORRUPT', value: 1, trigger: 'ON_ATTACK' }],
+  },
+  {
+    id: 'gg-08', slug: 'roi-charognard', name: 'Roi Charognard',
+    race: 'GOBELINS_GNOLLS', rarity: 'LEGENDARY', cardType: 'UNIT',
+    cost: 8, atk: 7, hp: 12, speed: 5,
+    effects: [
+      { code: 'POISON', value: 3, trigger: 'ON_ATTACK' },
+      { code: 'SUMMON', value: 3, trigger: 'ON_DEATH' },
+      { code: 'LIFESTEAL', value: 3, trigger: 'ON_ATTACK' },
+    ],
   },
 ];
 
-// Shadow token generated by SUMMON
 export const SHADOW_TOKEN: CardDefinition = {
-  id: 'token-shadow', slug: 'shadow-token', name: "Ombre d'Écho",
-  faction: 'UMBRA', rarity: 'COMMON', cardType: 'UNIT',
+  id: 'token-shadow', slug: 'shadow-token', name: "Créature d'Ombre",
+  race: 'GOBELINS_GNOLLS', rarity: 'COMMON', cardType: 'UNIT',
   cost: 0, atk: 1, hp: 1, speed: 1, effects: [],
 };
 
-export function getSolariCards() { return ALL_CARDS.filter(c => c.faction === 'SOLARI'); }
-export function getUmbraCards() { return ALL_CARDS.filter(c => c.faction === 'UMBRA'); }
+export function getCardsByRace(race: Race) { return ALL_CARDS.filter(c => c.race === race); }
 
-export function buildDefaultDeck(faction: Faction): CardDefinition[] {
-  const factionCards = ALL_CARDS.filter(c => c.faction === faction);
-  const deck: CardDefinition[] = [];
-  for (const card of factionCards) {
-    const copies = card.rarity === 'LEGENDARY' ? 1 : 2;
-    for (let i = 0; i < copies; i++) deck.push({ ...card });
-  }
-  // Fill to 30 by duplicating commons
-  const commons = factionCards.filter(c => c.rarity === 'COMMON');
-  let ci = 0;
-  while (deck.length < 30) {
-    deck.push({ ...commons[ci % commons.length] });
-    ci++;
-  }
-  return deck.slice(0, 30);
+export function buildDefaultDeck(race: Race): CardDefinition[] {
+  const raceCards = ALL_CARDS.filter(c => c.race === race);
+  return [...raceCards].sort((a, b) => (b.atk * 2 + b.hp) - (a.atk * 2 + a.hp)).slice(0, 10);
 }

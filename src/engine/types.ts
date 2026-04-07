@@ -1,4 +1,4 @@
-export type Faction = 'SOLARI' | 'UMBRA';
+export type Race = 'HUMAINS_NAINS' | 'ELFES' | 'ORCS_TROLLS' | 'GOBELINS_GNOLLS';
 export type Rarity = 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
 export type AIDifficulty = 'NOVICE' | 'SCHOLAR' | 'MASTER';
 export type GameStatus = 'PLAYING' | 'VICTORY' | 'DEFEAT';
@@ -21,13 +21,13 @@ export interface CardDefinition {
   id: string;
   slug: string;
   name: string;
-  faction: Faction;
+  race: Race;
   rarity: Rarity;
-  cardType: 'UNIT' | 'SPELL' | 'RELIC';
+  cardType: 'UNIT';
   cost: number;
   atk: number;
   hp: number;
-  speed: number; // initial wait timer
+  speed: number;
   effects: CardEffect[];
   artUrl?: string;
   level?: number;
@@ -42,7 +42,7 @@ export interface BoardUnit {
   maxHp: number;
   currentShield: number;
   poisonStacks: number;
-  wait: number; // countdown - attacks when 0
+  wait: number;
   hasAttacked: boolean;
   hasRebirth: boolean;
   rebirthHp: number;
@@ -53,7 +53,7 @@ export interface BoardUnit {
 export interface HeroDefinition {
   id: string;
   name: string;
-  faction: Faction;
+  race: Race;
   hp: number;
   skillName: string;
   skillDescription: string;
@@ -97,16 +97,28 @@ export interface GameState {
   status: GameStatus;
   player: {
     hero: HeroState;
-    board: (BoardUnit | null)[]; // 5 slots
+    board: (BoardUnit | null)[];
   };
   opponent: {
     hero: HeroState;
-    board: (BoardUnit | null)[]; // 5 slots
+    board: (BoardUnit | null)[];
   };
   events: CombatEvent[];
   floatingNumbers: FloatingNumber[];
   heroFloatingNumbers: HeroFloatingNumber[];
   aiDifficulty: AIDifficulty;
   isAutoBattle: boolean;
-  battleSpeed: number; // 1 or 2
+  battleSpeed: number;
 }
+
+export interface DeckSlot {
+  heroId: string;
+  cardIds: string[]; // up to 10 creatures
+}
+
+export const RACE_INFO: Record<Race, { label: string; color: string; icon: string }> = {
+  HUMAINS_NAINS: { label: 'Humains & Nains', color: '#c9a84c', icon: '⚔' },
+  ELFES: { label: 'Elfes', color: '#4ade80', icon: '🌿' },
+  ORCS_TROLLS: { label: 'Orcs & Trolls', color: '#ef4444', icon: '🔥' },
+  GOBELINS_GNOLLS: { label: 'Gobelins & Gnolls', color: '#a855f7', icon: '💀' },
+};

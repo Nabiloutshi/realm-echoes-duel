@@ -1,4 +1,4 @@
-import { BoardUnit, Rarity } from '@/engine/types';
+import { BoardUnit, Rarity, RACE_INFO } from '@/engine/types';
 import { CARD_ART } from '@/data/cardArt';
 
 interface GameCardProps {
@@ -25,7 +25,7 @@ export default function GameCard({ unit, size = 'board' }: GameCardProps) {
   const borderColor = RARITY_BORDER[card.rarity];
   const stars = RARITY_STARS[card.rarity];
   const hpPercent = Math.max(0, (unit.currentHp / unit.maxHp) * 100);
-  const isSolari = card.faction === 'SOLARI';
+  const raceInfo = RACE_INFO[card.race];
   const artSrc = CARD_ART[card.id];
 
   const isHeroSize = size === 'hero';
@@ -80,12 +80,8 @@ export default function GameCard({ unit, size = 'board' }: GameCardProps) {
           <img src={artSrc} alt={card.name} className="absolute inset-0 w-full h-full object-cover" />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center"
-            style={{
-              background: isSolari
-                ? 'linear-gradient(135deg, #2a1a0a, #1a1205)'
-                : 'linear-gradient(135deg, #1a0a2a, #0d0518)',
-            }}>
-            <span style={{ fontSize: 40, opacity: 0.5 }}>{isSolari ? '☀' : '☽'}</span>
+            style={{ background: 'linear-gradient(135deg, #1a1520, #0d0a15)' }}>
+            <span style={{ fontSize: 40, opacity: 0.5 }}>{raceInfo.icon}</span>
           </div>
         )}
 
