@@ -1,7 +1,14 @@
 import { HeroDefinition } from '@/engine/types';
+import heroHn1 from '@/assets/heroes/hero-hn-1.jpg';
+import heroHn2 from '@/assets/heroes/hero-hn-2.jpg';
+import heroElf1 from '@/assets/heroes/hero-elf-1.jpg';
+import heroElf2 from '@/assets/heroes/hero-elf-2.jpg';
+import heroOt1 from '@/assets/heroes/hero-ot-1.jpg';
+import heroOt2 from '@/assets/heroes/hero-ot-2.jpg';
+import heroGg1 from '@/assets/heroes/hero-gg-1.jpg';
+import heroGg2 from '@/assets/heroes/hero-gg-2.jpg';
 
 export const HEROES: HeroDefinition[] = [
-  // ═══ HUMAINS & NAINS ═══
   {
     id: 'hero-hn-1',
     name: 'Tharion le Juste',
@@ -9,6 +16,7 @@ export const HEROES: HeroDefinition[] = [
     hp: 14000,
     skillName: 'Rempart Inébranlable',
     skillDescription: 'Ajoute 200 de bouclier à toutes les créatures alliées.',
+    artUrl: heroHn1,
   },
   {
     id: 'hero-hn-2',
@@ -17,8 +25,8 @@ export const HEROES: HeroDefinition[] = [
     hp: 15000,
     skillName: 'Marteau Ancestral',
     skillDescription: "Inflige 300 dégâts à l'ennemi le plus puissant.",
+    artUrl: heroHn2,
   },
-  // ═══ ELFES ═══
   {
     id: 'hero-elf-1',
     name: 'Sylendris Lunargent',
@@ -26,6 +34,7 @@ export const HEROES: HeroDefinition[] = [
     hp: 12000,
     skillName: 'Chant de la Forêt',
     skillDescription: 'Restaure 250 PV à toutes les créatures alliées.',
+    artUrl: heroElf1,
   },
   {
     id: 'hero-elf-2',
@@ -34,8 +43,8 @@ export const HEROES: HeroDefinition[] = [
     hp: 13000,
     skillName: 'Flèche Crépusculaire',
     skillDescription: 'Inflige 200 dégâts à 2 ennemis aléatoires.',
+    artUrl: heroElf2,
   },
-  // ═══ ORCS & TROLLS ═══
   {
     id: 'hero-ot-1',
     name: "Grok'thar Briseciel",
@@ -43,6 +52,7 @@ export const HEROES: HeroDefinition[] = [
     hp: 16000,
     skillName: 'Cri de Guerre',
     skillDescription: "Augmente l'ATQ de toutes les créatures de 150 pendant 1 tour.",
+    artUrl: heroOt1,
   },
   {
     id: 'hero-ot-2',
@@ -51,8 +61,8 @@ export const HEROES: HeroDefinition[] = [
     hp: 14500,
     skillName: 'Régénération Trollesque',
     skillDescription: 'Restaure 500 PV au héros et 100 PV à chaque créature.',
+    artUrl: heroOt2,
   },
-  // ═══ GOBELINS & GNOLLS ═══
   {
     id: 'hero-gg-1',
     name: 'Skritch Doigts-Vifs',
@@ -60,6 +70,7 @@ export const HEROES: HeroDefinition[] = [
     hp: 11000,
     skillName: 'Piège Explosif',
     skillDescription: 'Inflige 150 dégâts à toutes les créatures ennemies.',
+    artUrl: heroGg1,
   },
   {
     id: 'hero-gg-2',
@@ -68,6 +79,7 @@ export const HEROES: HeroDefinition[] = [
     hp: 13500,
     skillName: 'Morsure Empoisonnée',
     skillDescription: 'Empoisonne toutes les créatures ennemies (2 stacks).',
+    artUrl: heroGg2,
   },
 ];
 
