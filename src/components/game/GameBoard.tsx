@@ -10,70 +10,70 @@ export default function GameBoard({ state }: GameBoardProps) {
   const plrRace = state.player.hero.hero.race;
 
   return (
-    <div className="flex-1 flex flex-col justify-center items-center relative overflow-hidden board-grid"
-      style={{ background: 'linear-gradient(180deg, #080b12 0%, #0d1220 50%, #080b12 100%)' }}>
+    <div className="flex-1 flex flex-col justify-center items-center relative overflow-hidden"
+      style={{
+        background: `
+          radial-gradient(ellipse 60% 40% at 50% 50%, #141a2a 0%, transparent 70%),
+          linear-gradient(180deg, #080b12 0%, #0d1220 50%, #080b12 100%)
+        `,
+      }}>
 
-      {/* Opponent territory label */}
-      <div className="font-cinzel text-[10px] tracking-[3px] mb-2"
-        style={{ color: `${RACE_INFO[oppRace].color}80` }}>
-        TERRITOIRE ENNEMI
-      </div>
+      {/* Metallic board frame */}
+      <div className="relative rounded-lg overflow-hidden" style={{
+        border: '2px solid #2a3245',
+        boxShadow: 'inset 0 0 30px #00000080, 0 0 20px #00000060',
+        background: '#0a0e18',
+        padding: '8px',
+      }}>
+        {/* Opponent row */}
+        <div className="flex gap-1.5 mb-2 justify-center">
+          {state.opponent.board.map((unit, i) => (
+            <div key={`opp-${i}`} className="relative">
+              {unit ? <GameCard unit={unit} /> : <EmptySlot />}
+              {state.floatingNumbers
+                .filter(f => f.side === 'opponent' && f.slotIndex === i)
+                .map(f => <FloatingNum key={f.id} data={f} />)}
+            </div>
+          ))}
+        </div>
 
-      {/* Opponent board */}
-      <div className="flex gap-2 mb-4">
-        {state.opponent.board.map((unit, i) => (
-          <div key={`opp-${i}`} className="relative">
-            {unit ? <GameCard unit={unit} /> : <EmptySlot raceColor={RACE_INFO[oppRace].color} icon={RACE_INFO[oppRace].icon} />}
-            {state.floatingNumbers
-              .filter(f => f.side === 'opponent' && f.slotIndex === i)
-              .map(f => <FloatingNum key={f.id} data={f} />)}
-          </div>
-        ))}
-      </div>
+        {/* Divider line */}
+        <div className="flex items-center justify-center my-1.5">
+          <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, #2a3245, transparent)' }} />
+        </div>
 
-      {/* Center divider */}
-      <div className="flex items-center gap-3 my-2">
-        <div style={{ width: 80, height: 1, background: 'linear-gradient(90deg, transparent, hsl(var(--primary)), transparent)' }} />
-        <span className="font-cinzel text-[10px] tracking-wider" style={{ color: 'hsl(var(--primary) / 0.6)' }}>
-          ✦ CHAMP DE BATAILLE ✦
-        </span>
-        <div style={{ width: 80, height: 1, background: 'linear-gradient(90deg, transparent, hsl(var(--primary)), transparent)' }} />
-      </div>
-
-      {/* Player board */}
-      <div className="flex gap-2 mt-4">
-        {state.player.board.map((unit, i) => (
-          <div key={`plr-${i}`} className="relative">
-            {unit ? <GameCard unit={unit} /> : <EmptySlot raceColor={RACE_INFO[plrRace].color} icon={RACE_INFO[plrRace].icon} />}
-            {state.floatingNumbers
-              .filter(f => f.side === 'player' && f.slotIndex === i)
-              .map(f => <FloatingNum key={f.id} data={f} />)}
-          </div>
-        ))}
-      </div>
-
-      {/* Player territory label */}
-      <div className="font-cinzel text-[10px] tracking-[3px] mt-2"
-        style={{ color: `${RACE_INFO[plrRace].color}80` }}>
-        VOTRE TERRITOIRE
+        {/* Player row */}
+        <div className="flex gap-1.5 justify-center">
+          {state.player.board.map((unit, i) => (
+            <div key={`plr-${i}`} className="relative">
+              {unit ? <GameCard unit={unit} /> : <EmptySlot />}
+              {state.floatingNumbers
+                .filter(f => f.side === 'player' && f.slotIndex === i)
+                .map(f => <FloatingNum key={f.id} data={f} />)}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-function EmptySlot({ raceColor, icon }: { raceColor: string; icon: string }) {
+function EmptySlot() {
   return (
     <div className="flex items-center justify-center"
       style={{
-        width: 140, height: 195, borderRadius: 6,
-        border: `1px dashed ${raceColor}30`, background: '#0a0e1840',
+        width: 130, height: 180, borderRadius: 4,
+        border: '1px solid #1a223540',
+        background: 'radial-gradient(circle, #0d122040 0%, #080b1220 100%)',
       }}>
+      {/* Pentagram/seal icon */}
       <div style={{
-        width: 50, height: 50, borderRadius: '50%',
-        border: `1px solid ${raceColor}20`,
+        width: 40, height: 40, borderRadius: '50%',
+        border: '1px solid #1a223560',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
+        opacity: 0.3,
       }}>
-        <span style={{ color: `${raceColor}30`, fontSize: 20 }}>{icon}</span>
+        <span style={{ fontSize: 16, color: '#2a3245' }}>✦</span>
       </div>
     </div>
   );
@@ -87,8 +87,9 @@ function FloatingNum({ data }: { data: FloatingNumber }) {
   return (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 animate-float-up"
       style={{
-        color, fontSize: 36, fontWeight: 900, fontFamily: 'Cinzel, serif',
+        color, fontSize: 32, fontWeight: 900, fontFamily: 'Cinzel, serif',
         textShadow: `0 2px 8px ${color}80, 0 0 20px ${color}40`,
+        WebkitTextStroke: '1px #00000080',
       }}>
       {data.value > 0 ? `+${data.value}` : data.value}
     </div>
