@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AIDifficulty, Race, RACE_INFO } from '@/engine/types';
 import { HEROES } from '@/data/heroes';
+import { useProgress } from '@/hooks/useProgress';
 import menuBg from '@/assets/menu-bg.jpg';
 
 const DIFFICULTIES: { key: AIDifficulty; label: string; desc: string }[] = [
@@ -15,6 +16,7 @@ export default function MenuPage() {
   const [selectedRace, setSelectedRace] = useState<Race>('HUMAINS_NAINS');
   const [showDiffModal, setShowDiffModal] = useState(false);
   const navigate = useNavigate();
+  const { progress } = useProgress();
   const [particles, setParticles] = useState<{ id: number; x: number; y: number; size: number; dur: number; delay: number }[]>([]);
 
   const raceHeroes = HEROES.filter(h => h.race === selectedRace);
@@ -78,11 +80,18 @@ export default function MenuPage() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <ResourceBadge icon="💎" value="2,450" />
-          <ResourceBadge icon="🪙" value="18,300" />
+          <ResourceBadge icon="💎" value={progress.gems.toLocaleString()} />
+          <ResourceBadge icon="🪙" value={progress.gold.toLocaleString()} />
           <div className="flex items-center gap-1 px-2 py-1 rounded"
             style={{ background: '#1a223560', border: '1px solid #2a324540' }}>
-            <span className="font-cinzel text-[10px]" style={{ color: '#8a9bb0' }}>Niv. 15</span>
+            <span className="font-cinzel text-[10px]" style={{ color: '#8a9bb0' }}>Niv. {progress.level}</span>
+          </div>
+          {/* XP bar */}
+          <div className="w-20 h-1.5 rounded-full overflow-hidden" style={{ background: '#1a2235' }}>
+            <div className="h-full rounded-full transition-all" style={{
+              width: `${(progress.xp / progress.xpToNext) * 100}%`,
+              background: 'linear-gradient(90deg, #c9a84c, #f0c040)',
+            }} />
           </div>
         </div>
       </div>
@@ -200,6 +209,13 @@ export default function MenuPage() {
               textColor="#e8dfc8"
               onClick={() => navigate('/deck')}
             />
+            <MenuButton
+              icon="🗺" label="CAMPAGNE" sublabel="Explorez le monde"
+              gradient="linear-gradient(135deg, #1a2235, #2a3245)"
+              glowColor="#ef4444"
+              textColor="#e8dfc8"
+              onClick={() => navigate('/campaign')}
+            />
             <div className="flex gap-3">
               <MenuButton
                 icon="📖" label="COLLECTION" sublabel="Toutes les cartes"
@@ -214,7 +230,7 @@ export default function MenuPage() {
                 gradient="linear-gradient(135deg, #1a2235, #2a3245)"
                 glowColor="#4ade80"
                 textColor="#e8dfc8"
-                onClick={() => {}}
+                onClick={() => navigate('/shop')}
                 half
               />
             </div>
